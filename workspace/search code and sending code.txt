@@ -1,0 +1,26 @@
+  java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
+        int i = 0;
+        String[] r = new String[5];
+
+        while (portEnum.hasMoreElements() && i < 5) {
+            CommPortIdentifier portIdentifier = portEnum.nextElement();
+
+            r[i] = portIdentifier.getName();//+  " - " +  getPortTypeName(portIdentifier.getPortType()) ;
+
+
+            i++;
+
+
+        }
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(r));
+
+******************************************************************
+ String x= jTextField1.getText();
+       Serial sr=new Serial();
+       Object selectedItem = jComboBox1.getSelectedItem();
+        
+        String com = selectedItem.toString();
+       sr.ser(x.getBytes(),com);
+       sr.close();
+

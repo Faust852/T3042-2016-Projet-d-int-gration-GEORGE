@@ -1,0 +1,34 @@
+package pr1.main;
+
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
+public class Map {
+	
+	TileManager tiles = new TileManager();
+
+
+	public Map() {
+		
+	}
+	
+	public void init(){
+		BufferedImage map = null;
+		
+		try {
+			map = LoadImageFrom.loadImageFrom(Main.class, "map.png");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void tick(double deltaTime){
+		
+	}
+	
+	public void render(Graphics2D g){
+		
+	}
+
+}

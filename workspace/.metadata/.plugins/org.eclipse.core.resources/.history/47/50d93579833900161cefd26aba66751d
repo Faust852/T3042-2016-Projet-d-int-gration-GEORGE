@@ -1,0 +1,47 @@
+package pr1.main;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
+public class Animator {
+	
+	private ArrayList<BufferedImage> frames;
+	private volatile boolean running = false;
+	private BufferedImage sprite;
+	
+	
+	private long prevTime, speed;
+	private int FramAtPause, CurrentFrame;
+	
+	
+	public Animator(ArrayList<BufferedImage> frames) {
+		this.frames = frames;
+	}
+	
+	public void setSpeed(long speed){
+		this.speed = speed;
+	}
+	
+	public void update(long time){
+		if(running) {
+			if(time - prevTime >= speed){
+				CurrentFrame++;
+				try {
+					sprite = frames.get(CurrentFrame);
+				} catch (IndexOutOfBoundsException e) {
+					CurrentFrame = 0;
+					e.printStackTrace();				
+					}
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+

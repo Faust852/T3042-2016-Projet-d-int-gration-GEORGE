@@ -1,0 +1,114 @@
+import gnu.io.CommPort;
+import gnu.io.CommPortIdentifier;
+import gnu.io.SerialPort;
+import gnu.io.SerialPortEvent;
+import gnu.io.SerialPortEventListener;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+
+import javax.swing.JOptionPane;
+
+/**
+ * This version of the TwoWaySerialComm example makes use of the 
+ * SerialPortEventListener to avoid polling.
+ *
+ */
+public class TwoWaySerialComm {
+	
+	OutputStream out1;
+	ReceiveTransmit window = null;
+	String chaine = "";
+	
+    public TwoWaySerialComm(){
+        this.window = window;
+    }
+    
+    void connect ( String portName ) throws Exception{
+        CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
+        if ( portIdentifier.isCurrentlyOwned() ){
+            System.out.println("Error: Port is currently in use");
+        }
+        else{
+            CommPort commPort = portIdentifier.open(this.getClass().getName(),2000);
+            
+            if ( commPort instanceof SerialPort ){
+                SerialPort serialPort = (SerialPort) commPort;
+                serialPort.setSerialPortParams(9600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+                
+                InputStream in = serialPort.getInputStream();
+                OutputStream out = serialPort.getOutputStream();
+                out1=out;
+                (new Thread(new SerialWriter(out))).start();
+                
+                serialPort.addEventListener((SerialPortEventListener) new SerialReader(in));
+                serialPort.notifyOnDataAvailable(true);
+
+            }
+            else{
+                System.out.println("Error: Only serial ports are handled by this example.");
+            }
+        }     
+        
+    }
+    public void bindKeys(String serialData[], int sizeOfData) {
+    	String chaine = "";
+    	 
+        for(int j=0;j<sizeOfData-1;j++){
+
+                chaine = chaine + serialData[j];
+        }
+
+        window.getTextField().setText(chaine); //Mettre un JtextArea?
+    }
+    public void sendLimit(String send) {
+
+        try {
+                out1.write(send.getBytes());
+                out1.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+    /**
+     * Handles the input coming from the serial port. A new line character
+     * is treated as the end of a block in this example. 
+     */
+    public static class SerialReader implements Runnable { 
+        InputStream in;   
+        public SerialReader( InputStream in ) {
+          this.in = in;
+        }  
+        public void run() {
+          byte[] buffer = new byte[ 1024 ];
+          int len = -1;
+          try {
+            while( ( len = this.in.read( buffer ) ) > -1 ) {
+              System.out.print( new String( buffer, 0, len ) );
+            }
+          } catch( IOException e ) {
+            e.printStackTrace();
+          }
+        }
+      }
+    public static class SerialWriter implements Runnable {
+    	 
+        OutputStream out;     
+        public SerialWriter( OutputStream out ) {
+          this.out = out;
+        }
+        public void run() {
+          try {
+            int c = 0;
+            while( ( c = System.in.read() ) > -1 ) {
+              this.out.write( c );
+            }
+          } catch( IOException e ) {
+            e.printStackTrace();
+          }
+        }
+      }
+
+}

@@ -1,0 +1,29 @@
+package pr1.main;
+
+import java.awt.Graphics2D;
+
+public class LevelLoader extends GameState{
+
+	public LevelLoader(GameStateManager gsm) {
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tick(double deltaTime) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void render(Graphics2D g) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

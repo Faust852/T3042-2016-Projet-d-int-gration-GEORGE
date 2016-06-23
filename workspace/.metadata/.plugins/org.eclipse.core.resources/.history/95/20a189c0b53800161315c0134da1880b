@@ -1,0 +1,12 @@
+package pr1.main;
+
+public class Map {
+	
+	TileManager tiles = new TileManager();
+	
+
+	public Map() {
+		
+	}
+
+}

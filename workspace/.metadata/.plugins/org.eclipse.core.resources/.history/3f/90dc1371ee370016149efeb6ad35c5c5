@@ -1,0 +1,63 @@
+package pr1.main;
+
+public class Vector2F {
+	
+	public float xPos;
+	public float yPos;
+
+	public static float worldXPos;
+	public static float worldYPos;
+	
+	public Vector2F() {
+		this.xPos = 0.0F;
+		this.yPos = 0.0F;
+	}
+	public Vector2F(float xPos, float yPos) {
+		this.xPos = xPos;
+		this.yPos = yPos;
+	}
+	
+	public static Vector2F zero() {
+		return new Vector2F(0,0);		
+	}
+	
+	public void normalize() {
+		double length = Math.sqrt(xPos * xPos + yPos * yPos);
+		if (length != 0.0) {
+			float s = 1.0F / (float) length;
+			xPos = xPos*s;
+			yPos = yPos*s;
+		}
+	}
+	
+	public boolean equals(Vector2F v) {
+		return (this.xPos == v.xPos && this.yPos == v.yPos);
+	}
+	
+	public Vector2F copy(Vector2F v) {
+		xPos = v.xPos;
+		yPos = v.yPos;
+		return new Vector2F(xPos,yPos);
+	}
+	
+	public Vector2F add(Vector2F v){
+		xPos = xPos + v.xPos;
+		yPos = yPos + v.yPos;
+		return new Vector2F(xPos, yPos);
+	}
+	
+	public static void setWorldVariable(float wx, wy) {
+		worldXPos = wx;
+		worldYPos = wy;
+	}
+	
+	
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,48 @@
+package pr1.main;
+
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
+public class Map {
+	
+	TileManager tiles = new TileManager();
+
+
+	public Map() {
+		
+	}
+	
+	public void init(){
+		BufferedImage map = null;
+		
+		try {
+			map = LoadImageFrom.loadImageFrom(Main.class, "map.png");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		for (int x = 0; x < 100; x++) {
+			for (int y = 0; y < 100; y++) {
+				int col = map.getRGB(x, y);
+				switch (col & 0xffffff) {
+				case 0x808080:
+					System.out.println("contain grey");;
+					break;
+
+				default:
+					break;
+				}
+			}
+		}
+		
+	}
+	
+	public void tick(double deltaTime){
+		
+	}
+	
+	public void render(Graphics2D g){
+		
+	}
+
+}

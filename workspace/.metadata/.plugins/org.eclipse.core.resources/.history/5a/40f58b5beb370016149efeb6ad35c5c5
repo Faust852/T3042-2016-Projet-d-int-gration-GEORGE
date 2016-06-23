@@ -1,0 +1,9 @@
+package pr1.main;
+
+import java.awt.image.BufferedImage;
+
+public class SpriteSheet {
+	
+	private BufferedImage spriteSheet;
+	
+}

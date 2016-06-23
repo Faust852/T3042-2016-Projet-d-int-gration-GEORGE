@@ -1,0 +1,11 @@
+package pr1.main;
+
+public class Assets {
+	
+	SpriteSheet blocks = new SpriteSheet();
+	
+	public void init() {
+		blocks.setSpriteSheet(LoadImageFrom.loadImageFrom(this, "spriteSheet.png"));
+	}
+
+}

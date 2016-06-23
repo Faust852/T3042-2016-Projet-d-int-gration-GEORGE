@@ -1,0 +1,29 @@
+package pr1.main;
+
+import java.awt.Graphics2D;
+
+public class LevelLoader extends GameState{
+	
+	SpriteSheet test = new SpriteSheet();
+
+	public LevelLoader(GameStateManager gsm) {
+		super(gsm);
+	}
+
+	@Override
+	public void init() {
+		test.setSpriteSheet(LoadImageFrom.loadImageFrom(Main.class, "spriteSheet.png"));
+	}
+
+	@Override
+	public void tick(double deltaTime) {
+				
+	}
+
+	@Override
+	public void render(Graphics2D g) {
+		g.drawString("Hello World", 200, 200);
+		g.drawImage(test.getTile(0, 0, 16, 16), 0, 0, 64, 64, null);
+	}
+
+}
