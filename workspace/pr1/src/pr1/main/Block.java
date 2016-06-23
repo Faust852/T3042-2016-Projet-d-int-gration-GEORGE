@@ -29,6 +29,9 @@ public class Block extends Rectangle{
 		case WALL_1:
 			block = Assets.getWall_1();
 			break;
+		case WALL_TOP_1:
+			block = Assets.getWall_top_1();
+			break;
 
 		}
 	}
@@ -40,13 +43,14 @@ public class Block extends Rectangle{
 	public void render(Graphics2D g){
 		g.drawImage(block, (int)pos.getWorldLocation().xPos, (int)pos.getWorldLocation().yPos, blockSize, blockSize, null);
 		if(isSolid){
-			g.drawRect((int)pos.getWorldLocation().xPos, (int)pos.getWorldLocation().yPos, blockSize, blockSize);
+			//g.drawRect((int)pos.getWorldLocation().xPos, (int)pos.getWorldLocation().yPos, blockSize, blockSize);
 		}
 	}
 	
 	public enum BlockType{
 		STONE_1,
-		WALL_1
+		WALL_1,
+		WALL_TOP_1
 	}
 
 	public Block isSolid(boolean isSolid) {

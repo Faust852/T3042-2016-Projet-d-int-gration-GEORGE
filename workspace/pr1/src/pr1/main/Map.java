@@ -37,7 +37,9 @@ public class Map {
 				case 0x707070:
 					tiles.blocks.add(new Block(new Vector2F(x*48,y*48), BlockType.WALL_1).isSolid(true));
 					break;
-
+				case 0xFEFEFE:
+					tiles.blocks.add(new Block(new Vector2F(x*48,y*48), BlockType.WALL_TOP_1).isSolid(true));
+					break;
 				default:
 					break;
 				}
