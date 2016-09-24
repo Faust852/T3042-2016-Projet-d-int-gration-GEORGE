@@ -1,7 +1,0 @@
-package pr1.main;
-
-import java.awt.Component;
-
-public class GameLoop extends Component {
-
-}

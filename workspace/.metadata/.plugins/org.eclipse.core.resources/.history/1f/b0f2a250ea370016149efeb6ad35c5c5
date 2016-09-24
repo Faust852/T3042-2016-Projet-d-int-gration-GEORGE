@@ -1,8 +1,0 @@
-package pr1.main;
-
-public class LoadImageFrom {
-
-	public LoadImageFrom(Class<?> classfile, String path) {
-		
-	}
-}

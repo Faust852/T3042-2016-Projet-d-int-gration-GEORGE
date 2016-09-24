@@ -1,6 +1,0 @@
-
-public class mainElec {
-	public static void main(String[] args) {
-		GUI com = new GUI();
-	}
-}
