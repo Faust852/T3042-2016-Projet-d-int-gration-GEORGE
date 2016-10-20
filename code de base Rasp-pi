@@ -1,5 +1,3 @@
-
-
 import RPi.GPIO as GPIO
 import socket
 from threading import Thread
@@ -74,12 +72,15 @@ class Listener(Thread):
 class Controller(Thread):
     def run(self):
         while 1:
-            speedM1 = data['speedM1']
-            directionM1 = data['directionM1']
+            try:
+                speedM1 = data['speedM1']
+                directionM1 = data['directionM1']
 
-            speedM2 = data['speedM2']
-            directionM2 = data['directionM2']
-            
+                speedM2 = data['speedM2']
+                directionM2 = data['directionM2']
+            except:
+                print("error syntax for 'data' \n 'data' must contain 'speedM1', 'directionM1', 'speedM2', 'directionM2'")
+
             motor1.CangeDutyCycle(speedM1)
             self.direction(directionM1, directionTPinM1, directionFPinM1)
 
