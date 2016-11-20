@@ -8,7 +8,6 @@
         <?php echo $titrePage?>
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="./CSS/chat.css">
     <link rel="stylesheet" href="./CSS/slicknav.css">
     <link rel="stylesheet" href="./font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="./CSS/site.css" media="screen" />
