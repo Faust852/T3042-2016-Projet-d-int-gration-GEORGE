@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="253b7907-53d0-48f1-8daa-00a2f9befe0c" name="GEORGES" url="http://185.14.186.97">
+        <fileTransfer host="185.14.186.97" port="22" privateKey="C:\Users\Atom\AppData\Local\lxss\home\atom\.ssh\id_rsa" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

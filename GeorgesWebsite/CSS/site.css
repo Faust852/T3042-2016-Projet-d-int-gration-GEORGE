@@ -1,0 +1,196 @@
+body {
+    color: #F0E39E;
+    background: #DCDCDC;
+    font-family: Calibri;
+}
+
+.menu {
+	display : none;
+}
+
+#contenu {
+    color: #363B29;
+    background: white;
+}
+
+.signLogP{
+    text-align: center;
+}
+
+@media screen and (max-width: 415px){
+    .contactDiv{
+        width: 88%;
+    }
+
+}
+
+@media screen and (min-width: 416px){
+    .logSign
+		{}
+
+    #submitChat{
+        margin-left: 47%;
+    }
+}
+
+@media screen and (min-width: 680px){
+    .contactDiv{
+        width: 250px;
+    }
+}
+
+body {
+    padding: 2% 4%;
+    min-width: 280px;
+}
+#contenu p, #contenu li {
+    line-height: 1.5;
+}
+
+input[type=submit] {
+    width : 150px;
+    text-align : center;
+}
+
+.contactDiv{
+    float: left;
+    margin: 10px 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
+    background: #4c4c4c;
+    color: white;
+    height: 115px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#contenu {
+    margin-bottom: 2%;
+    padding: 1% 2%;
+    overflow: auto;
+}
+
+.contactDiv a{
+    color: white;
+}
+.contactDiv a:hover{
+    color: lightgoldenrodyellow;
+}
+
+#connectionFailed{
+    display:none;
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+
+#texteAccueil{
+    text-align: center;
+}
+
+.verif{
+    padding-left: 1%;
+    color: red;
+    font-weight: bold;
+}
+
+#pseudo, #verifMdp{
+    margin-bottom: 1%;
+}
+
+.formField{
+    border-radius: 5px;
+    padding: 8px;
+    margin: 3px;
+    border: solid 1px #dcdcdc;
+    transition: box-shadow 0.3s, border 0.3s;
+}
+
+.formField:focus{
+    background-color: lightblue;
+}
+
+.submitButton{
+    padding:5px 15px;
+    background:#ccc;
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.submitButton:hover{
+    background: #8b8b8b;
+}
+
+.contactP{
+    font-weight: bold;
+}
+
+.a_goToPortal{
+    font-style: normal;
+    text-decoration: none;
+}
+
+.soumission {
+    text-align: center;
+}
+
+fieldset {
+    border: 0;
+}
+
+.formTitle{
+    font-weight: bold;
+}
+
+#divUpArrow, #divDownArrow{
+    width: 100%;
+    text-align: center;
+}
+
+.crossButtons{
+    height: 50px;
+    width: 50px;
+}
+
+.spanArrow{
+    font-size: 35px;
+}
+
+#videoDiv{
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+}
+
+#divLeftArrow, #divRightArrow{
+    width: 50%;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+#divLeftArrow{
+    float: left;
+}
+
+#divRightArrow{
+    float: right;
+}
+
+#buttonLeftArrow{
+    float:right;
+    margin-right: 40px;
+}
+
+#buttonRightArrow{
+    float:left;
+    margin-left: 40px;
+}
+
+#chatLink{
+    text-decoration: none;
+    color: black;
+}
+
