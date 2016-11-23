@@ -1,19 +1,13 @@
 <?php
-//include 'config.template.inc.php';
-//_____________________________________________________Remplir la session _____________________________________________
-function fillSession(){
-    //DataBase Information
-    $_SESSION['DB']['host'] = '';
-    $_SESSION['DB']['dbname'] = '';
-    $_SESSION['DB']['user'] = '';
-    $_SESSION['DB']['pswd'] = '';
-}
-
 //______________________________________________________ConnectBDD______________________________________________________
 
 function ConnectBDD (){
+    $host = "185.14.186.97";
+    $dbname = 'georges';
+    $user = 'root';
+    $pswd = 'c3m3cqu10';
     try {
-        $bdd = new PDO('mysql:host=' . $_SESSION['DB']['host'] . ';dbname=' . $_SESSION['DB']['dbname'] . ';charset=utf8', $_SESSION['DB']['user'], $_SESSION['DB']['pswd']);
+        $bdd = new PDO('mysql:host=' . $host . ';dbname=' . $dbname . ';charset=utf8', $user, $pswd);
     } catch (PDOException $e) {
         send('connectionFailed', 'ERREURPDO dans '.$e);
     };
@@ -68,7 +62,7 @@ function newUser()
 function gestionLogin() {
     $username = $_POST['username'];
 
-    $sections = ConnectBDD()->prepare("select id, pseudo, email, mdp
+    $sections = ConnectBDD()->prepare("select id, pseudo, email, mdp, status
                                  from USER where pseudo =:pseudo");
     $sections->execute(array(':pseudo' => $username));
     $sectionTab = $sections->fetchAll(PDO::FETCH_ASSOC);
@@ -78,6 +72,7 @@ function gestionLogin() {
     if (md5($_POST['password']) !== "" && md5($_POST['password']) == $sectionTab[0]['mdp']) {
         $_SESSION['is']['connected'] = 1;
         $_SESSION['user'] = $sectionTab[0]['id'];
+        $_SESSION['status'] = $sectionTab[0]['status'];
         $_SESSION['username'] = $sectionTab[0]['pseudo'];
         creeConnectedMenu();
     } else {
@@ -212,9 +207,24 @@ function creeConnectedMenu(){
             'Lier un robot' => 'adminRobot.html'],
             'Déconnexion' => 'logout.html',
             'Page de présentation' => 'goToFirst.html'
+        ],
+        'adminMenu' => ['Accueil' => 'accueil.html',
+            'Contact' => 'contact.html',
+            'Forum' => 'chat.html',
+            'Robot' => ['Contrôle ton robot' => 'video.html',
+                'Vidéos disponibles' => 'mesVideos.html',
+                'Lier un robot' => 'adminRobot.html'],
+            'Admin' => ['Utilisateurs' => 'users.html',
+                            'Robots' => 'robots.html',
+                            'Links' => 'robotLinks.html'],
+            'Déconnexion' => 'logout.html',
+            'Page de présentation' => 'goToFirst.html'
         ]
     ];
     switch(true){
+        case isConnected() and ($_SESSION['status'] == 'admin'):
+            send('menu', creeMenu($lesMenus['adminMenu']));
+            break;
         case isConnected():
             send('menu', creeMenu($lesMenus['connectedUser']));
             break;
@@ -257,11 +267,24 @@ function traiteForm(){
     }
     return $return;
 }
-
+//________________________________________________ If robot is linked___________________________________________________
+function checkLinkedRobots(){
+    $idRobot = ConnectBDD()->prepare("SELECT id_robot FROM USER_ROBOT where id_user = ".$_SESSION['user']);
+    $idRobot->execute();
+    $idRobotAnswer = $idRobot->fetchAll(PDO::FETCH_ASSOC);
+    if($idRobotAnswer){
+        return true;
+    }else{
+        return false;
+    }
+}
 //__________________________________________________connect sockets_____________________________________________________
 
 function socket ($socket) {
-	$host = "192.168.255.2";
+    $idRobot = ConnectBDD()->prepare("SELECT ip FROM ROBOT where id = (SELECT id_robot FROM USER_ROBOT where id_user=".$_SESSION['user'].")");
+	$idRobot->execute();
+    $idRobotAnswer = $idRobot->fetchAll(PDO::FETCH_ASSOC);
+    $host = $idRobotAnswer[0]['ip'];
 	$port = 62900;
 	$output=$socket ;
 	$socket1 = socket_create(AF_INET, SOCK_STREAM,0) or die("Could not create socket\n");
@@ -269,7 +292,22 @@ function socket ($socket) {
 	socket_write($socket1, $output, strlen ($output)) or die("Could not write output\n");
 	socket_close($socket1) ;
 }
+//__________________________________________________See user____________________________________________________________
+function getUserlist()
+{
+    $users = ConnectBDD()->exec("select * from USER");
+    //$users->execute();
+    //$usersList = $users->fetchAll(PDO::FETCH_ASSOC);
 
+    //return monPrint_r($usersList);
+
+    $tableau = new tableau();
+    $tableau->entete = true;
+    $tableau->id = 'usersTab';
+    $tableau->liste = $users;
+
+    return $tableau->html();
+}
 //__________________________________________________creerVideos_________________________________________________________
 
 function creerVideos () {
@@ -277,20 +315,20 @@ function creerVideos () {
 	$dir    = './IMG/motion/*.avi';
 	$files = glob($dir);
 	$retour = '';
-
-
+	
+	
 	foreach($files as $image)
-		{
+		{ 
 			$retour.='<a href='.$image.'>'.$image.'</a><br>';
 
 		  // $retour.='<img src='.$image.'></img>';
 		}
-
-
+		
+		
 
 //$files1 = scandir($dir);
 
-	return $retour;
+	return $retour;	
 }
 
 //__________________________________________________traiter request_____________________________________________________
@@ -309,7 +347,11 @@ function traiteRequest($rq) {
             send('contenu', chargeTemplate($rq));
             break;
         case 'video' :
-            send('contenu', chargeTemplate($rq));
+            if(checkLinkedRobots()){
+                send('contenu', chargeTemplate($rq));
+            }else{
+                send('contenu', chargeTemplate('noLinkedRobot'));
+            }
             break;
         case 'adminRobot' :
             send('contenu', chargeTemplate($rq));
@@ -331,6 +373,9 @@ function traiteRequest($rq) {
         case 'signup' :
             send('contenu', chargeTemplate($rq));
             break;
+        case 'users':
+            send('contenu', getUserlist());
+            break;
         case 'goToFirst':
             $_SESSION['startPageViewed'] = false;
             //Creer les menus reload la page
@@ -345,10 +390,15 @@ function traiteRequest($rq) {
 		    socket($rq);
 			break;
 		case 'mesVideos' :
-		    send('contenu', creerVideos());
+            if(checkLinkedRobots()){
+                send('contenu', creerVideos());
+            }else{
+                send('contenu', chargeTemplate('noLinkedRobot'));
+            }
 			break;
         default : send('contenu', 'Requête inconnue : '.$_GET['rq']);
     }
 }
 
 ?>
+

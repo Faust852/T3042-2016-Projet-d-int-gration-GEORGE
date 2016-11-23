@@ -11,7 +11,6 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 
 if (!isset ($_SESSION['start'])) {
     $_SESSION["time"] = microtime(true);
     $_SESSION['start'] = microtime(true);
-    fillSession();
 }
 
 $titrePage  = 'Accueil';

@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    $('#usersList').DataTable();
     $(function(){
         $('#menu').slicknav({
             label: 'Menu',
@@ -7,6 +8,8 @@ $(document).ready(function(){
             easingOpen: 'swing'
         });
     });
+
+
 });
 //
 function traiteRetour(objetJS){
@@ -39,7 +42,7 @@ function traiteRetour(objetJS){
                 $('#' + i).html('<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>' + ' ' + objetJS[i]);
                 break;
             case 'variable':
-                alert(objetJS[i]);
+                console.log(objetJS[i]);
                 break;
             case 'reload':
                 location.reload();
