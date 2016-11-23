@@ -2,10 +2,11 @@
 //______________________________________________________ConnectBDD______________________________________________________
 
 function ConnectBDD (){
-    $host = "185.14.186.97";
-    $dbname = 'georges';
-    $user = 'root';
-    $pswd = 'c3m3cqu10';
+  //DataBase information
+    $host = "";
+    $dbname = '';
+    $user = '';
+    $pswd = '';
     try {
         $bdd = new PDO('mysql:host=' . $host . ';dbname=' . $dbname . ';charset=utf8', $user, $pswd);
     } catch (PDOException $e) {
@@ -315,20 +316,20 @@ function creerVideos () {
 	$dir    = './IMG/motion/*.avi';
 	$files = glob($dir);
 	$retour = '';
-	
-	
+
+
 	foreach($files as $image)
-		{ 
+		{
 			$retour.='<a href='.$image.'>'.$image.'</a><br>';
 
 		  // $retour.='<img src='.$image.'></img>';
 		}
-		
-		
+
+
 
 //$files1 = scandir($dir);
 
-	return $retour;	
+	return $retour;
 }
 
 //__________________________________________________traiter request_____________________________________________________
@@ -401,4 +402,3 @@ function traiteRequest($rq) {
 }
 
 ?>
-
