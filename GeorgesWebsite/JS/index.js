@@ -1,4 +1,4 @@
-//
+//Made by Adrien Culem
 function traiteRetour(objetJS){
     $.map( objetJS, function(val, i) {
         switch (i) {
@@ -191,5 +191,3 @@ function sideMenu() {
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
-
-
