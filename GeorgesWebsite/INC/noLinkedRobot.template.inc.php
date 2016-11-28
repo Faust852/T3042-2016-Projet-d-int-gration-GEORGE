@@ -1,3 +1,3 @@
 <div id="texteAccueil">
-    <p>Désolé, vous n'êtes pas encore lié à un robot</p>
+    <p>Sorry, you must link yourself to your robot first</p>
 </div>

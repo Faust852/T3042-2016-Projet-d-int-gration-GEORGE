@@ -1,8 +1,9 @@
 <?php
+//Coded by Adrien Culem
+include 'tableau.php';
 //______________________________________________________ConnectBDD______________________________________________________
 
 function ConnectBDD (){
-  //DataBase information
     $host = "";
     $dbname = '';
     $user = '';
@@ -26,34 +27,34 @@ function newUser()
 
     $sections = ConnectBDD()->prepare("select pseudo from USER");
     $sections->execute();
-    $sectionTab = $sections->fetchAll(PDO::FETCH_COLUMN, 0);
+    $sectionTab = $sections->fetchAll(PDO::FETCH_COLUMN);
     $i = 0;
     $b = " ";
+    send("variable", $sectionTab);
     if (in_array($pseudo, $sectionTab)) {
-        $b .= "Ce pseudo est déjà utilisé";
+        $b .= 'Ce pseudo est déjà utilisé';
         $i = 1;
     }
     if ($mdp !== $verifMdp) {
         $b .= '<br>Les mots de passe sont différents';
         $i = 1;
-        //send('variable', 'c');
     }
     if (!($pseudo && $email && $mdp && $verifMdp && $verifEmail)){
         $b .= '<br>Tous les champs ne sont pas completés';
         $i = 1;
-        //send('variable', 'd' . $b);
     }
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $b.= '<br>Email non valide';
         $i = 1;
     }
-    if($i == 0){
+    if($i == '0'){
         $sections = ConnectBDD()->prepare("INSERT INTO USER (pseudo, mdp, email)
                                        VALUES (:pseudo, :mdp, :email)");
         $sections->execute(array(':pseudo' => $pseudo, ':mdp' => md5($mdp), ':email' => $email));
-        $b .= "Votre compte a bien été enregistré";
+        $b .= "<h1 class='signLogP'>Votre compte a bien été enregistré</h1>";
         return $b;
-    }else{
+    }
+    if($i == '1'){
         send('connectionFailed', $b);
         return chargeTemplate('signup');
     }
@@ -109,37 +110,67 @@ function linkRobot(){
 
 
 //______________________________________________________creer menu________________________________________________________
-
-function creeMenu ($tabMenu) {
+//☰
+function creeMenu ($tabMenu, $a) {
     $htmlMenu = '';
-    $htmlMenu.='<ul>';
+    $htmlMenu.='<ul class="w3-navbar w3-large w3-dark-grey w3-left-align">';
+    /*$htmlMenu.='<li class="w3-hide-medium w3-hide-large w3-dark-grey w3-opennav w3-right">
+    <a href="javascript:void(0);" onclick="sideMenu()" style="color: white"></a>
+    </li>';*/
+    $htmlMenu.='<li class="w3-hide-medium w3-hide-large w3-dark-grey w3-opennav w3-right">
+    <div onclick="sideMenu();" class="nav-icon">
+    <div></div>
+    </div>
+    </li>';
 
     $nomMenu = array_keys($tabMenu);
     $i=0;
     foreach ($tabMenu as $value) {
-        $titreOnglet = ucfirst(strtolower($nomMenu[$i]));
+        $titreOnglet = str_replace(' ', '', ucfirst($nomMenu[$i]));
         if($value){
             if(is_array($value)){
-                $htmlMenu .= '<li>'.$titreOnglet.'<ul>';
+                $htmlMenu .= '<li style="width:'.$a.'%; text-align: center" class="w3-dropdown-hover w3-hide-small"><a href="#">'.$titreOnglet.' <i class="fa fa-chevron-down" aria-hidden="true"></i></a><div style="width:'.$a.'%;" class="w3-dropdown-content w3-white w3-card-4">';
                 foreach($value as $k=>$v){
-                    $htmlMenu .= '<li><a href='.$v.'>'.$k.'</a></li>';
+                    $htmlMenu .= '<a onclick="return menuClick(this)" href='.$v.'>'.$k.'</a>';
                 }
-                $htmlMenu .= '</ul></li>';
+                $htmlMenu .= '</div></li>';
             }
-            else{
-                $htmlMenu.='<li><a href='.$value.' id= o_'.$titreOnglet.'>'.$titreOnglet.'</a></li>';
+            elseif($titreOnglet == 'Home'){
+                $htmlMenu.='<li style="width:'.$a.'%; text-align: center"><a onclick="return menuClick(this)" href='.$value.' id= o_'.$titreOnglet.'>'.$titreOnglet.'</a></li>';
+            }else{
+                $htmlMenu.='<li style="width:'.$a.'%; text-align: center" class="w3-hide-small"><a onclick="return menuClick(this)" href='.$value.' id= o_'.$titreOnglet.'>'.$titreOnglet.'</a></li>';
             }
         }
         else{
             $htmlMenu.='<li><h1>'.$nomMenu[$i].'</a></li>';
         }
-        /*($value)    ? $htmlMenu.='<li><a href='.$value.' id= o_'.$titreOnglet.'>'.$titreOnglet.'</a></li>'
-                    : $htmlMenu.='<li><h1>'.$nomMenu[$i].'</a></li>';
-           */
         $i++;
     }
 
     $htmlMenu.='</ul>';
+
+    $htmlMenu.='<div id="demo" class="w3-hide w3-hide-large w3-hide-medium">';
+    $htmlMenu.='<ul class="w3-navbar w3-left-align w3-large w3-dark-grey">';
+    $i=0;
+    foreach ($tabMenu as $value) {
+        $titreOnglet = ucfirst(strtolower($nomMenu[$i]));
+        if($value){
+            if(is_array($value)){
+                $htmlMenu .= '<li class="w3-dropdown-hover"><a href="#">'.$titreOnglet.' <i class="fa fa-chevron-down" aria-hidden="true"></i></a><div class="w3-dropdown-content w3-white w3-card-4">';
+                foreach($value as $k=>$v){
+                    $htmlMenu .= '<a onclick="sideMenu(); return menuClick(this);" href='.$v.'>'.$k.'</a>';
+                }
+                $htmlMenu .= '</div></li>';
+            }elseif($titreOnglet == 'Home'){
+            }else{
+                $htmlMenu.='<li><a onclick="sideMenu(); return menuClick(this);" href='.$value.' id= o_'.$titreOnglet.'>'.$titreOnglet.'</a></li>';
+            }
+        }
+        else{
+            $htmlMenu.='<li><h1>'.$nomMenu[$i].'</a></li>';
+        }
+        $i++;
+    }
 
     return $htmlMenu;
 }
@@ -159,7 +190,6 @@ function monPrint_r ($tab){
 function chargeAccueil (){
     if($_SESSION['is']['connected'] == 1){
         $temp  = chargeTemplate('accueilConnected');
-        send('user', ' ' . ucfirst($_SESSION['username']));
     }else{
         $temp  = chargeTemplate('accueil');
     }
@@ -194,43 +224,45 @@ function getData($g, $n){
 //__________________________________________________Menu for if connected_______________________________________________
 
 function creeConnectedMenu(){
-    $lesMenus = ['menu' => ['Accueil' => 'accueil.html',
+    //The menu that is created
+    $lesMenus = ['menu' => ['Home' => 'home.html',
         'Contact' => 'contact.html',
-        'Se connecter' => 'login.html',
-        'S\'inscrire' => 'signup.html',
-        'Page de présentation' => 'goToFirst.html'
+        'Sign in' => 'login.html',
+        'Sign up' => 'signup.html',
+        'Home page' => 'goToFirst.html'
     ],
-        'connectedUser' => ['Accueil' => 'accueil.html',
+        'connectedUser' => ['Home' => 'home.html',
             'Contact' => 'contact.html',
             'Forum' => 'chat.html',
-            'Robot' => ['Contrôle ton robot' => 'video.html',
-			'Vidéos disponibles' => 'mesVideos.html',
-            'Lier un robot' => 'adminRobot.html'],
-            'Déconnexion' => 'logout.html',
-            'Page de présentation' => 'goToFirst.html'
+            'Georges' => ['Controls' => 'video.html',
+			'Videos' => 'mesVideos.html',
+            'Link to your Georges' => 'adminRobot.html'],
+            'Log out' => 'logout.html',
+            'Home page' => 'goToFirst.html'
         ],
-        'adminMenu' => ['Accueil' => 'accueil.html',
+        'adminMenu' => ['Home' => 'home.html',
             'Contact' => 'contact.html',
             'Forum' => 'chat.html',
-            'Robot' => ['Contrôle ton robot' => 'video.html',
-                'Vidéos disponibles' => 'mesVideos.html',
-                'Lier un robot' => 'adminRobot.html'],
-            'Admin' => ['Utilisateurs' => 'users.html',
+            'Georges' => ['Controls' => 'video.html',
+                'Videos' => 'mesVideos.html',
+                'Link to your Georges' => 'adminRobot.html'],
+            'Admin' => ['Users' => 'users.html',
                             'Robots' => 'robots.html',
                             'Links' => 'robotLinks.html'],
-            'Déconnexion' => 'logout.html',
-            'Page de présentation' => 'goToFirst.html'
+            'Log out' => 'logout.html',
+            'Home page' => 'goToFirst.html'
         ]
     ];
+    //Division for li's width in menu
     switch(true){
         case isConnected() and ($_SESSION['status'] == 'admin'):
-            send('menu', creeMenu($lesMenus['adminMenu']));
+            send('menu', creeMenu($lesMenus['adminMenu'], 100/7));
             break;
         case isConnected():
-            send('menu', creeMenu($lesMenus['connectedUser']));
+            send('menu', creeMenu($lesMenus['connectedUser'], 100/6));
             break;
         default:
-            send('menu', creeMenu($lesMenus['menu']));
+            send('menu', creeMenu($lesMenus['menu'], 100/5));
     }
 }
 //______________________________________________isConnected()___________________________________________________________
@@ -256,14 +288,6 @@ function traiteForm(){
         case 'sendRobot' :
             $return = linkRobot();
             break;
-        case 'goToPortal':
-            $return = chargeTemplate('layout');
-            $_SESSION['startPageViewed'] = true;
-            break;
-        case 'sendChat':
-            //$retour = addMessage();
-            //break;
-        case 'sendMdpPerdu':
         default : $return = getFormInfo();
     }
     return $return;
@@ -296,18 +320,85 @@ function socket ($socket) {
 //__________________________________________________See user____________________________________________________________
 function getUserlist()
 {
-    $users = ConnectBDD()->exec("select * from USER");
-    //$users->execute();
-    //$usersList = $users->fetchAll(PDO::FETCH_ASSOC);
+    $users = ConnectBDD()->prepare("select id, pseudo, email, status from USER");
+    $users->execute();
+    $usersList = $users->fetchAll(PDO::FETCH_ASSOC);
 
     //return monPrint_r($usersList);
 
     $tableau = new tableau();
     $tableau->entete = true;
     $tableau->id = 'usersTab';
-    $tableau->liste = $users;
+    $tableau->liste = $usersList;
+    $tableau->titre = 'Utilisateurs';
+    $tableau->tabId = 'id';
+    $tableau->type = 'user';
 
-    return $tableau->html();
+    send('contenu', $tableau->html());
+    send('dataTable', $tableau->id);
+}
+//__________________________________________________ See Robots ________________________________________________________
+function getRobotList()
+{
+    $robots = ConnectBDD()->prepare("select * from ROBOT");
+    $robots->execute();
+    $robotsList = $robots->fetchAll(PDO::FETCH_ASSOC);
+
+    //return monPrint_r($usersList);
+
+    $tableau = new tableau();
+    $tableau->entete = true;
+    $tableau->id = 'robotList';
+    $tableau->liste = $robotsList;
+    $tableau->titre = 'Robots';
+    $tableau->tabId = 'id';
+    $tableau->type = 'robot';
+
+    send('contenu', $tableau->html());
+    send('dataTable', $tableau->id);
+}
+//_________________________________________________ see Links __________________________________________________________
+function getRobotLinksList()
+{
+    $links = ConnectBDD()->prepare("select u.id, pseudo, id_robot
+          from USER as u JOIN USER_ROBOT as r ON u.id =r.id_user");
+    $links->execute();
+    $linksList = $links->fetchAll(PDO::FETCH_ASSOC);
+
+    //return monPrint_r($usersList);
+
+    $tableau = new tableau();
+    $tableau->entete = true;
+    $tableau->id = 'linksList';
+    $tableau->liste = $linksList;
+    $tableau->titre = 'Linked Users';
+    $tableau->tabId = 'id';
+    $tableau->type = 'link';
+
+    send('contenu', $tableau->html());
+    send('dataTable', $tableau->id);
+}
+//___________________________________________________ Admin delete in db _______________________________________________
+function deleteFromDb(){
+    $id = $_GET['idDelete'];
+    send('variable', $id);
+    $type = $_GET['type'];
+    send('variable', $type);
+    if($type == 'link'){
+        $db = ConnectBDD()->prepare("delete from USER_ROBOT where id_user=".$id);
+        $db->execute();
+        return getRobotLinksList();
+    }elseif ($type == 'robot'){
+        $db = ConnectBDD()->prepare("delete from ROBOT where id=".$id);
+        $db->execute();
+        return getRobotList();
+    }elseif ($type == 'user'){
+        $db = ConnectBDD()->prepare("delete from USER where id=".$id);
+        $db->execute();
+        return getUserlist();
+    }else{
+        send('contenu', 'Oops, something went wrong');
+    }
 }
 //__________________________________________________creerVideos_________________________________________________________
 
@@ -338,7 +429,7 @@ function traiteRequest($rq) {
     send('contenu', '');
 
     switch ($rq){
-        case 'accueil' :
+        case 'home' :
             send('contenu', chargeAccueil());
             if($_SESSION['is']['connected'] == 1){
                 send('user', ' ' . ucfirst($_SESSION['username']));
@@ -367,19 +458,29 @@ function traiteRequest($rq) {
             send('contenu', chargeTemplate($rq));
             break;
         case 'logout' :
-            session_unset();
-            session_destroy();
+            $_SESSION['is']['connected'] = 0;
+            $_SESSION['user'] = '';
+            $_SESSION['status'] = '';
+            $_SESSION['username'] = '';
             creeConnectedMenu();
             break;
         case 'signup' :
             send('contenu', chargeTemplate($rq));
             break;
         case 'users':
-            send('contenu', getUserlist());
+            getUserlist();
+            break;
+        case 'robots':
+            getRobotList();
+            break;
+        case 'robotLinks':
+            getRobotLinksList();
+            break;
+        case 'startPageViewed':
+            $_SESSION['startPageViewed'] = true;
             break;
         case 'goToFirst':
             $_SESSION['startPageViewed'] = false;
-            //Creer les menus reload la page
             creeConnectedMenu();
             break;
         case 'up' :
@@ -396,7 +497,11 @@ function traiteRequest($rq) {
             }else{
                 send('contenu', chargeTemplate('noLinkedRobot'));
             }
+            $titrePage = 'Georgesecurity - Videos';
 			break;
+        case 'deleteFromDb':
+            deleteFromDb();
+            break;
         default : send('contenu', 'Requête inconnue : '.$_GET['rq']);
     }
 }

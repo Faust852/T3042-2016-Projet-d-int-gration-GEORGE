@@ -1,10 +1,11 @@
 <?php
-include 'INC/mesFonctions.inc.php';
+include_once 'INC/mesFonctions.inc.php';
 
 session_start();
 
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) {
     traiteRequest('logout');
+    $_SESSION['startPageViewed'] = false;
     send('reload', '');
 }
 
@@ -13,7 +14,7 @@ if (!isset ($_SESSION['start'])) {
     $_SESSION['start'] = microtime(true);
 }
 
-$titrePage  = 'Accueil';
+$titrePage  = 'Georgesecurity - Home';
 
 if (isset ($_GET['rq'])) {
     $_SESSION['rqLog'][time()]=$_GET['rq'];

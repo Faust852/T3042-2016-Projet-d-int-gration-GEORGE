@@ -1,4 +1,4 @@
 <div id="texteAccueil">
-    <p>Bienvenue<span id="user"></span></p>
-    <p>Vous êtes connecté sur le site de Georges!</p>
+    <h1>Welcome</h1>
+    <h3>You are logged in!</h3>
 </div>

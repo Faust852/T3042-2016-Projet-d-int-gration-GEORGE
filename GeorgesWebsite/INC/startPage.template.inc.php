@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
-<title>Georges the little robot </title>
+<title>Georgesecurity - Home page</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet" href="./CSS/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -49,7 +49,7 @@
 
     /* Create a Parallax Effect */
     .bgimg-1, .bgimg-2, .bgimg-3 {
-        opacity: 0.7;
+        /*opacity: 0.7;*/
         background-attachment: fixed;
         background-position: center;
         background-repeat: no-repeat;
@@ -58,8 +58,13 @@
 
     /* First image (Logo. Full height) */
     .bgimg-1 {
-        background-image: url("../IMG/robotHome.png");
+        background-image: url("../IMG/Georges3-min.JPG");
         min-height: 100%;
+    }
+
+    .bgimg-2{
+        background-image: url("../IMG/ecoFriendly-min.jpg");
+        min-height: 70%;
     }
 
     .w3-wide {letter-spacing: 10px;}
@@ -77,8 +82,8 @@
 <!-- Navbar (sit on top) -->
 <div class="w3-top">
     <ul class="w3-navbar" id="myNavbar">
-        <li><a href="#">HOME</a></li>
-        <li style="float: right"><a href="index.php">Go to portal</a></li>
+        <li style="color: black"><a href="#">HOME</a></li>
+        <li style="float: right; color: black;"><a href="index.php" onclick='startPageViewed();'>Go to portal</a></li>
     </ul>
 </div>
 
@@ -96,16 +101,18 @@
     <p style="text-align: center"t>We have created a Robot that secures your house while you're gone.
     </p>
     <div class="w3-row">
-        <div class="w3-col m6 w3-center w3-padding-large">
-            <p><b>Georges the little robot</b></p><br>
-            <img src="/w3images/avatar_hat.jpg" class="w3-round w3-image w3-opacity w3-hover-opacity-off" alt="Coming soon" width="500" height="333">
+        <div class="w3-col m6 w3-center w3-card-12">
+            <img src="/IMG/Georges-min.JPG" class="w3-round w3-image" alt="First Georges prototype" width="100%" height="333">
+            <div class="w3-container w3-center">
+                <p><b>First prototype of Georges</b></p><br>
+            </div>
         </div>
 
         <!-- Hide this text on small devices -->
-        <div class="w3-col m6 w3-hide-small w3-padding-large">
-            <p>Georges is a robot made to secure your house while you're gone. He is doing that by watching all around your house on it's own.
-                If someone comes in Georges takes a picture and send you an email/sms with the picture he just took.
-                The project is made by Dimitri Verdonck, Cyril Wastchenko, Marco Peters, Simon Ponchau, David Micciche and Adrien Culem</p>
+        <div class="w3-col m6 w3-padding-large">
+            <p>Georges is a robot made to secure your house while you're gone. He is doing so by watching all around your house on it's own.
+                If someone comes in Georges snaps a picture and send it you by email/sms with the picture he just took.
+                This project was brought to life by Dimitri Verdonck, Cyril Wastchenko, Marco Peters, Simon Ponchau, David Micciche and Adrien Culem.</p>
         </div>
     </div>
     <p class="w3-large w3-center w3-padding-16">Im really good at:</p>
@@ -121,10 +128,15 @@
     <div class="w3-progress-container">
         <div class="w3-progressbar" style="width:100%"></div>
     </div>
-
-    <!--<form method ='post' action="index.php" id="formPortal">
-        <input type="submit" name="goToPortal" id="goToPortal" value="Go to portal" <?php $_SESSION['startPageViewed'] = true?>>
-    </form>-->
+</div>
+<div class="bgimg-2 w3-display-container">
+</div>
+<div class="w3-content w3-container w3-padding-64">
+    <h3 class="w3-center">Eco friendly</h3>
+    <p style="text-align: center"t>We wanted Georges to be as eco-responsible as possible</p>
+    <div class="w3-col m6 w3-padding-large w3-center">
+        <p>Yet to be written</p>
+    </div>
 </div>
 <!-- Footer -->
 <footer class="w3-center w3-black w3-padding-16 w3-opacity w3-hover-opacity-off">

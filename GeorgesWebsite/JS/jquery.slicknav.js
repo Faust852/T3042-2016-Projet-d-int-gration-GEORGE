@@ -3,6 +3,8 @@
  * (c) 2016 Josh Cope
  * licensed under MIT
  */
+
+var no4tabs = 0;
 function checkKey(e) {
 
     e = e || window.event;
@@ -306,7 +308,15 @@ function checkKey(e) {
 			var rq= e.attr('href').split('.')[0];
             if(rq != '#') {
                 if(rq == "chat"){
-                    newTab();
+                    if(no4tabs == 0){
+                        newTab();
+                        no4tabs++;
+                        if(typeof InstallTrigger !== 'undefined'){
+                            location.reload();
+                        }
+                    }else{
+                        no4tabs = 0;
+                    }
                 }else{
                 $.get('index.php', 'rq=' + rq, function (result) {
                     traiteRetour(JSON.parse(result));
@@ -348,8 +358,8 @@ function checkKey(e) {
                 });
                 }
             }
-			$('title').html(e.text());				
-			return false;
+			$('title').html(e.text());
+            return false;
 		});
 
         });

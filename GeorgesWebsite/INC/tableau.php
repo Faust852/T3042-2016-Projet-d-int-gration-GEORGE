@@ -1,11 +1,13 @@
 <?php
+//coded by Simon Ponchau
 class tableau {
 
     public $liste;
     public $titre;
     public $entete;
     public $id;
-
+    public $tabId;
+    public $type;
     //retourne le nom de la page css
     public function getCss(){
         return 'tableau.css';
@@ -17,7 +19,7 @@ class tableau {
         //sinon affiche le tableau
         else {
             //affiche le titre du tableau en gras
-            $html = "<h1>$this->titre</h1><br>";
+            $html = "<h1 class='signLogP'>$this->titre</h1><br>";
             //donne la couleur du tableau en fonction de l'id passé
             $html .= "<table id=$this->id class=display>";
 
@@ -40,23 +42,15 @@ class tableau {
             foreach ($this->liste as $value) {
                 $html .= '<tr>';
                 foreach ($value as $key => $element) {
-                    if ($key == 'répondu'){
-                        if ($element == 'non') $html .= "<td class='repondre' id=".$value['id'].
-                            " title='répondre' onclick='event.preventDefault(); gereMessage(this.id);'>$element</td>";
-                        else  $html .= "<td id=".$value['id'].
-                            " title='répondre' onclick='event.preventDefault(); gereMessage(this.id);'>$element</td>";
-                    }
-                    else {
-                        $html .= "<td>$element</td>";
-                    }
+                    $html .= '<td style="text-align:center;" id="'.$value[$this->tabId].'" onclick=sendId('.$value[$this->tabId].',"'.$this->type.'")>'.$element.'</td>';
                 }
+            }
                 $html .= '</tr>';
             }
             $html .= '<tbody>';
 
             $html .= '</table>';
             return $html;
-        }
     }
 
 }

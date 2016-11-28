@@ -4,13 +4,10 @@ body {
     font-family: Calibri;
 }
 
-.menu {
-	display : none;
-}
-
 #contenu {
     color: #363B29;
     background: white;
+    margin-top: 50px;
 }
 
 .signLogP{
@@ -40,9 +37,13 @@ body {
 }
 
 body {
-    padding: 2% 4%;
     min-width: 280px;
 }
+
+#global{
+    padding: 2% 4%;
+}
+
 #contenu p, #contenu li {
     line-height: 1.5;
 }
@@ -62,6 +63,11 @@ input[type=submit] {
     -webkit-border-radius: 5px;
     border-radius: 5px;
     text-align: center;
+}
+
+.contactDiv2{
+    margin: 10px 10px 10px 10px;
+    float: left;
 }
 
 #contenu {
@@ -193,4 +199,60 @@ fieldset {
     text-decoration: none;
     color: black;
 }
+.ui-dialog .ui-dialog-content{
+    overflow: hidden;
+    text-align: center;
+}
+.deletingDialog .ui-dialog-content{
+    background:rgba(255, 0, 35, 0.43);
+    border: 1px solid #cf0013;
+    color: #fff;
+}
+.deletingDialog .ui-widget-content{
+    background:rgba(255, 0, 35, 0.43);
+    border: 1px solid #cf0013;
+    color: #fff;
+}
+.deletingDialog .ui-dialog-titlebar{
+    background: #cf0013;
+    border : 0;
+    color : #fff;
+}
 
+.deletingDialog #popUpDialog{
+    background: rgba(255, 0, 35, 0.43);
+    border: 1px solid #cf0013;
+    color: #fff;
+}
+
+.nav-icon {
+    margin-right: 10px;
+    width: 40px;
+    transform: scale(0.5, 0.5);
+}
+
+.nav-icon:after,
+.nav-icon:before,
+.nav-icon div {
+    background-color: #fff;
+    -o-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    content: '';
+    display: block;
+    height: 5px;
+    margin: 7px 0;
+    -moz-transition: all .2s ease-in-out;
+    -webkit-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+.homeMessage{
+    font-size: 1.2em;
+}
+
+.ui-widget-content{
+    border:none;
+}
