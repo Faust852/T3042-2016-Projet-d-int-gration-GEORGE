@@ -27,7 +27,7 @@
 			: b. MySQL Server
 			: c. DNS server
 			: d. VPN server
-
+####################
 4. Config Base 		:
 
 	4.1 Ajouter un compte administrateur non-root
@@ -58,7 +58,7 @@
 
 	4.5 Installer Fail2Ban, Log, etc... sur WebMin
 		sur https://185.14.186.97
-
+####################
 5. Config Web Stack	:
 	
 	le container Web Stack consiste principalement a faire 
@@ -79,7 +79,7 @@
 		sudo docker ps
 		netstat -tan : devrait afficher le port 80 et 443
 		curl http://185.14.186.97 : devrait afficher la source
-
+####################
 6. Config MySQL Server	:
 
 	Le container MySQL contient la logique de la base de données
@@ -94,7 +94,13 @@
 		sudo docker run -d --name=mysql -e \
 		MYSQL_ROOT_PASSWORD='%MYPASSWORD%’\
 		-v /storage/mysql/mysql-datadir:/var/lib/mysql mysql
-
+		
+	Creer la database et les tables (voir doc d'Adrien)
+####################
+7. Config DNS Server 	:
+####################
+8. Config VPN Server	:
+####################
 
 
 		
