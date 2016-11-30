@@ -1,5 +1,5 @@
 <?php
-//Coded by Adrien Culem
+//By Adrien Culem and Simon Ponchau
 include 'tableau.php';
 //______________________________________________________ConnectBDD______________________________________________________
 // Connection to the database
