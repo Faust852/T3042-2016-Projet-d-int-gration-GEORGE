@@ -325,10 +325,10 @@ function checkLinkedRobots(){
 function socket ($socket) {
     $idRobot = ConnectBDD()->prepare("SELECT ip FROM ROBOT where id = (SELECT id_robot FROM USER_ROBOT where id_user=".$_SESSION['user'].")");
 	$idRobot->execute();
-    $idRobotAnswer = $idRobot->fetchAll(PDO::FETCH_ASSOC);
-    $host = $idRobotAnswer[0]['ip'];
+  $idRobotAnswer = $idRobot->fetchAll(PDO::FETCH_ASSOC);
+  $host = $idRobotAnswer[0]['ip'];
 	$port = 62900;
-	$output=$socket ;
+	$output=$socket;
 	$socket1 = socket_create(AF_INET, SOCK_STREAM,0) or die("Could not create socket\n");
 	socket_connect ($socket1 , $host,$port ) ;
 	socket_write($socket1, $output, strlen ($output)) or die("Could not write output\n");
@@ -452,7 +452,7 @@ function creerVideos () {
 
 
 
-//$files1 = scandir($dir);
+    //$files1 = scandir($dir);
 
 	return $retour;
 }
