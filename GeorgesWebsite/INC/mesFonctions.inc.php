@@ -1,8 +1,8 @@
 <?php
-//Made by Adrien Culem
+//Coded by Adrien Culem
 include 'tableau.php';
 //______________________________________________________ConnectBDD______________________________________________________
-
+// Connection to the database
 function ConnectBDD (){
     $host = "";
     $dbname = '';
@@ -17,10 +17,11 @@ function ConnectBDD (){
     return $bdd;
 }
 //__________________________________________________new User____________________________________________________________
+// Create a new user in database
 function newUser()
 {
-    $pseudo = $_POST['pseudo'];
-    $mdp = $_POST['mdp'];
+    $username = $_POST['username'];
+    $mdp = $_POST['signupPassword'];
     $email = $_POST['email'];
     $verifEmail = $_POST['verifEmail'];
     $verifMdp = $_POST['verifMdp'];
@@ -30,37 +31,43 @@ function newUser()
     $sectionTab = $sections->fetchAll(PDO::FETCH_COLUMN);
     $i = 0;
     $b = " ";
-    send("variable", $sectionTab);
-    if (in_array($pseudo, $sectionTab)) {
+    //Check conditions
+    // Username already in database?
+    if (in_array($username, $sectionTab)) {
         $b .= 'Ce pseudo est déjà utilisé';
         $i = 1;
     }
+    // Same passwords?
     if ($mdp !== $verifMdp) {
         $b .= '<br>Les mots de passe sont différents';
         $i = 1;
     }
-    if (!($pseudo && $email && $mdp && $verifMdp && $verifEmail)){
+    // All fields completed?
+    if (!($username && $email && $mdp && $verifMdp && $verifEmail)){
         $b .= '<br>Tous les champs ne sont pas completés';
         $i = 1;
     }
+    //Right email type?
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $b.= '<br>Email non valide';
         $i = 1;
     }
+    //Create user if there is no error
     if($i == '0'){
         $sections = ConnectBDD()->prepare("INSERT INTO USER (pseudo, mdp, email)
                                        VALUES (:pseudo, :mdp, :email)");
-        $sections->execute(array(':pseudo' => $pseudo, ':mdp' => md5($mdp), ':email' => $email));
+        $sections->execute(array(':pseudo' => $username, ':mdp' => md5($mdp), ':email' => $email));
         $b .= "<h1 class='signLogP'>Votre compte a bien été enregistré</h1>";
         return $b;
     }
+    //If not, send message error
     if($i == '1'){
-        send('connectionFailed', $b);
+        send('connectionFailed',$b);
         return chargeTemplate('signup');
     }
 }
 //__________________________________________________gestion login_______________________________________________________
-
+// Allow users to connect
 function gestionLogin() {
     $username = $_POST['username'];
 
@@ -69,8 +76,7 @@ function gestionLogin() {
     $sections->execute(array(':pseudo' => $username));
     $sectionTab = $sections->fetchAll(PDO::FETCH_ASSOC);
 
-    //else {*/
-    //if (md5($_POST['password'])==$sectionTab[0]['mdp']) return monPrint_r($sectionTab);
+    //Check if md5 hashes are the same
     if (md5($_POST['password']) !== "" && md5($_POST['password']) == $sectionTab[0]['mdp']) {
         $_SESSION['is']['connected'] = 1;
         $_SESSION['user'] = $sectionTab[0]['id'];
@@ -78,6 +84,7 @@ function gestionLogin() {
         $_SESSION['username'] = $sectionTab[0]['pseudo'];
         creeConnectedMenu();
     } else {
+        //if not, send error
         send('connectionFailed', 'Mot de passe ou utilisateur incorrect');
         return chargeTemplate('login');
     }
@@ -85,7 +92,7 @@ function gestionLogin() {
 }
 
 //______________________________________________________Lier un robot et un user _________________________________________
-
+//Allow a user to link with his robot
 function linkRobot(){
     $id = $_POST['robot_id'];
     $mdp = $_POST['robot_password'];
@@ -97,26 +104,26 @@ function linkRobot(){
     $sections->execute(array(':id' => $id));
 
     $sectionTab = $sections->fetchAll(PDO::FETCH_ASSOC);
-
+    //Check if passwords are the same (Should be encrypted)
     if($mdp == $sectionTab[0]['mdp']){
         $results = ConnectBDD()->prepare("INSERT INTO USER_ROBOT(id_user, id_robot) VALUES (:id_user, :id_robot)");
         $results->execute(array(':id_user' => $userCo, ':id_robot' => $id));
         return "Votre robot vous est désormais lié!";
     }else{
+        //if not send error
         send('connectionFailed', "Le mot de passe ou l'id est incorrect");
-        return chargeTemplate('adminRobot');
+        return chargeTemplate('robotLink');
     }
 }
 
 
 //______________________________________________________creer menu________________________________________________________
 //☰
+//Create all the menus (Small format, and desktop format)
 function creeMenu ($tabMenu, $a) {
     $htmlMenu = '';
     $htmlMenu.='<ul class="w3-navbar w3-large w3-dark-grey w3-left-align">';
-    /*$htmlMenu.='<li class="w3-hide-medium w3-hide-large w3-dark-grey w3-opennav w3-right">
-    <a href="javascript:void(0);" onclick="sideMenu()" style="color: white"></a>
-    </li>';*/
+    //Menu icon
     $htmlMenu.='<li class="w3-hide-medium w3-hide-large w3-dark-grey w3-opennav w3-right">
     <div onclick="sideMenu();" class="nav-icon">
     <div></div>
@@ -127,21 +134,27 @@ function creeMenu ($tabMenu, $a) {
     $i=0;
     foreach ($tabMenu as $value) {
         $titreOnglet = str_replace(' ', '', ucfirst($nomMenu[$i]));
+        $content = ucfirst($nomMenu[$i]);
         if($value){
             if(is_array($value)){
-                $htmlMenu .= '<li style="width:'.$a.'%; text-align: center" class="w3-dropdown-hover w3-hide-small"><a href="#">'.$titreOnglet.' <i class="fa fa-chevron-down" aria-hidden="true"></i></a><div style="width:'.$a.'%;" class="w3-dropdown-content w3-white w3-card-4">';
+                //Creating the menu and submenu with the value in the array
+                $htmlMenu .= '<li style="width:'.$a.'%; text-align: center" class="w3-dropdown-hover w3-hide-small"><a href="#">'.$content.' <i class="fa fa-chevron-down" aria-hidden="true"></i></a><div style="width:'.$a.'%;" class="w3-dropdown-content w3-white w3-card-4">';
                 foreach($value as $k=>$v){
                     $htmlMenu .= '<a onclick="return menuClick(this)" href='.$v.'>'.$k.'</a>';
                 }
                 $htmlMenu .= '</div></li>';
             }
-            elseif($titreOnglet == 'Home'){
-                $htmlMenu.='<li style="width:'.$a.'%; text-align: center"><a onclick="return menuClick(this)" href='.$value.' id= o_'.$titreOnglet.'>'.$titreOnglet.'</a></li>';
-            }else{
-                $htmlMenu.='<li style="width:'.$a.'%; text-align: center" class="w3-hide-small"><a onclick="return menuClick(this)" href='.$value.' id= o_'.$titreOnglet.'>'.$titreOnglet.'</a></li>';
+            elseif($titreOnglet == 'Portal'){
+                //To stay displayed on the small menu
+                $htmlMenu.='<li style="width:'.$a.'%; text-align: center"><a onclick="return menuClick(this)" href='.$value.' id= o_'.$titreOnglet.'>'.$content.'</a></li>';
+            }elseif($titreOnglet == "Homepage") {
+                //To go back on presentation website
+                $htmlMenu.='<li style="width:'.$a.'%; text-align: center"><a href="javascript:void(startPageViewed());" id= o_'.$titreOnglet.'>'.$content.'</a></li>';
             }
-        }
-        else{
+            else{
+                $htmlMenu.='<li style="width:'.$a.'%; text-align: center" class="w3-hide-small"><a onclick="return menuClick(this)" href='.$value.' id= o_'.$titreOnglet.'>'.$content.'</a></li>';
+            }
+        }else{
             $htmlMenu.='<li><h1>'.$nomMenu[$i].'</a></li>';
         }
         $i++;
@@ -153,17 +166,23 @@ function creeMenu ($tabMenu, $a) {
     $htmlMenu.='<ul class="w3-navbar w3-left-align w3-large w3-dark-grey">';
     $i=0;
     foreach ($tabMenu as $value) {
-        $titreOnglet = ucfirst(strtolower($nomMenu[$i]));
+        $titreOnglet = str_replace(' ', '', ucfirst($nomMenu[$i]));
+        $content = ucfirst($nomMenu[$i]);
         if($value){
             if(is_array($value)){
-                $htmlMenu .= '<li class="w3-dropdown-hover"><a href="#">'.$titreOnglet.' <i class="fa fa-chevron-down" aria-hidden="true"></i></a><div class="w3-dropdown-content w3-white w3-card-4">';
+                //Creating the menu and submenu with the value in the array
+                $htmlMenu .= '<li class="w3-dropdown-hover"><a href="#">'.$content.' <i class="fa fa-chevron-down" aria-hidden="true"></i></a><div class="w3-dropdown-content w3-white w3-card-4">';
                 foreach($value as $k=>$v){
                     $htmlMenu .= '<a onclick="sideMenu(); return menuClick(this);" href='.$v.'>'.$k.'</a>';
                 }
                 $htmlMenu .= '</div></li>';
-            }elseif($titreOnglet == 'Home'){
-            }else{
-                $htmlMenu.='<li><a onclick="sideMenu(); return menuClick(this);" href='.$value.' id= o_'.$titreOnglet.'>'.$titreOnglet.'</a></li>';
+            }elseif($titreOnglet == 'Portal'){
+                //So the portal is not displayed twice (Since it stays even in small format)
+            }elseif($titreOnglet == "Homepage") {
+                $htmlMenu.='<li style="width:'.$a.'%; text-align: center"><a href="javascript:void(startPageViewed());" id= o_'.$titreOnglet.'>'.$content.'</a></li>';
+            }
+            else{
+                $htmlMenu.='<li><a onclick="sideMenu(); return menuClick(this);" href='.$value.' id= o_'.$titreOnglet.'>'.$content.'</a></li>';
             }
         }
         else{
@@ -176,7 +195,7 @@ function creeMenu ($tabMenu, $a) {
 }
 
 //______________________________________________________mon print_______________________________________________________
-
+//Simple array format
 function monPrint_r ($tab){
     $chaine = '<pre>';
     $chaine .= print_r($tab, true);
@@ -186,10 +205,11 @@ function monPrint_r ($tab){
 
 
 //______________________________________________________charger Accueil________________________________________________
-
+//Load adapted message on the portal (If you are connected or not)
 function chargeAccueil (){
     if($_SESSION['is']['connected'] == 1){
         $temp  = chargeTemplate('accueilConnected');
+        send('user', ' ' . ucfirst($_SESSION['username']));
     }else{
         $temp  = chargeTemplate('accueil');
     }
@@ -197,7 +217,7 @@ function chargeAccueil (){
 }
 
 //______________________________________________________charger template________________________________________________
-
+// Load .template.inc.php files
 function chargeTemplate ($t){
     $file = file('INC/'.$t.'.template.inc.php');
 
@@ -209,48 +229,43 @@ function chargeTemplate ($t){
 }
 
 //___________________________________________________Afficher info formulaire___________________________________________
-
+//Use in debuging (Shows a form informations)
 function getFormInfo() {
     $liste = ['_GET'=>$_GET, '_POST'=>$_POST, '_FILES'=>$_FILES];
     return monPrint_r($liste,true);
-}
-//__________________________________________________get data____________________________________________________________
-
-function getData($g, $n){
-    if (isset($_SESSION['iniA'][$g][$n])) return $_SESSION['iniA'][$g][$n];
-    else return "[$g][$n] inconnu";
 }
 
 //__________________________________________________Menu for if connected_______________________________________________
 
 function creeConnectedMenu(){
     //The menu that is created
-    $lesMenus = ['menu' => ['Home' => 'home.html',
+    $lesMenus = ['menu' => ['Portal' => 'home.html',
         'Contact' => 'contact.html',
         'Sign in' => 'login.html',
         'Sign up' => 'signup.html',
-        'Home page' => 'goToFirst.html'
+        'Home page' => 'homepage.html'
     ],
-        'connectedUser' => ['Home' => 'home.html',
+        'connectedUser' => ['Portal' => 'home.html',
             'Contact' => 'contact.html',
-            'Forum' => 'chat.html',
-            'Georges' => ['Controls' => 'video.html',
+            'Forum' => 'forum.html',
+            'Georges' => ['Controls' => 'controls.html',
 			'Videos' => 'mesVideos.html',
-            'Link to your Georges' => 'adminRobot.html'],
+            'Link to your Georges' => 'robotLink.html'],
             'Log out' => 'logout.html',
-            'Home page' => 'goToFirst.html'
+            'Home page' => 'homepage.html'
         ],
-        'adminMenu' => ['Home' => 'home.html',
+        'adminMenu' => ['Portal' => 'home.html',
             'Contact' => 'contact.html',
-            'Forum' => 'chat.html',
-            'Georges' => ['Controls' => 'video.html',
+            'Forum' => 'forum.html',
+            'Georges' => ['Controls' => 'controls.html',
                 'Videos' => 'mesVideos.html',
-                'Link to your Georges' => 'adminRobot.html'],
+                'Link to your Georges' => 'robotLink.html'],
             'Admin' => ['Users' => 'users.html',
                             'Robots' => 'robots.html',
-                            'Links' => 'robotLinks.html'],
+                            'Links' => 'robotLinks.html',
+                            'Add robots' => 'addRobots.html'],
             'Log out' => 'logout.html',
-            'Home page' => 'goToFirst.html'
+            'Home page' => 'homepage.html'
         ]
     ];
     //Division for li's width in menu
@@ -268,12 +283,13 @@ function creeConnectedMenu(){
 //______________________________________________isConnected()___________________________________________________________
 function isConnected(){return $_SESSION['is']['connected'];}
 //______________________________________________send____________________________________________________________________
-
+//Send in the layout
 function send($location, $text) {
     global $envoi;
     $envoi[$location] = $text;
 }
 //__________________________________________________ Traiter les formulaires ___________________________________________
+//Do the right thing for the right submit
 function traiteForm(){
     if(!isset($_GET['submit'])){
         return 'Impossible d\'identifier le formulaire';
@@ -293,6 +309,7 @@ function traiteForm(){
     return $return;
 }
 //________________________________________________ If robot is linked___________________________________________________
+//Just to check if you are linked with a robot
 function checkLinkedRobots(){
     $idRobot = ConnectBDD()->prepare("SELECT id_robot FROM USER_ROBOT where id_user = ".$_SESSION['user']);
     $idRobot->execute();
@@ -304,7 +321,7 @@ function checkLinkedRobots(){
     }
 }
 //__________________________________________________connect sockets_____________________________________________________
-
+//Send commands to the raspberry on the Georges
 function socket ($socket) {
     $idRobot = ConnectBDD()->prepare("SELECT ip FROM ROBOT where id = (SELECT id_robot FROM USER_ROBOT where id_user=".$_SESSION['user'].")");
 	$idRobot->execute();
@@ -318,6 +335,7 @@ function socket ($socket) {
 	socket_close($socket1) ;
 }
 //__________________________________________________See user____________________________________________________________
+//Used in admin mode, show users
 function getUserlist()
 {
     $users = ConnectBDD()->prepare("select id, pseudo, email, status from USER");
@@ -334,10 +352,15 @@ function getUserlist()
     $tableau->tabId = 'id';
     $tableau->type = 'user';
 
-    send('contenu', $tableau->html());
-    send('dataTable', $tableau->id);
+    if($_SESSION['status'] == "admin"){
+        send('contenu', $tableau->html());
+        send('dataTable', $tableau->id);
+    }else{
+        send('variable', 'Nice try');
+    }
 }
 //__________________________________________________ See Robots ________________________________________________________
+//Used in admin mode, show robots
 function getRobotList()
 {
     $robots = ConnectBDD()->prepare("select * from ROBOT");
@@ -354,10 +377,15 @@ function getRobotList()
     $tableau->tabId = 'id';
     $tableau->type = 'robot';
 
-    send('contenu', $tableau->html());
-    send('dataTable', $tableau->id);
+    if($_SESSION['status'] == "admin"){
+        send('contenu', $tableau->html());
+        send('dataTable', $tableau->id);
+    }else{
+        send('variable', 'Nice try');
+    }
 }
 //_________________________________________________ see Links __________________________________________________________
+//Used in admin mode, show links between users and robots
 function getRobotLinksList()
 {
     $links = ConnectBDD()->prepare("select u.id, pseudo, id_robot
@@ -374,34 +402,40 @@ function getRobotLinksList()
     $tableau->titre = 'Linked Users';
     $tableau->tabId = 'id';
     $tableau->type = 'link';
-
-    send('contenu', $tableau->html());
-    send('dataTable', $tableau->id);
+    if($_SESSION['status'] == "admin"){
+        send('contenu', $tableau->html());
+        send('dataTable', $tableau->id);
+    }else{
+        send('variable', 'Nice try');
+    }
 }
 //___________________________________________________ Admin delete in db _______________________________________________
+//Used in admin mode, delete anything you clicked on
 function deleteFromDb(){
     $id = $_GET['idDelete'];
-    send('variable', $id);
     $type = $_GET['type'];
-    send('variable', $type);
-    if($type == 'link'){
-        $db = ConnectBDD()->prepare("delete from USER_ROBOT where id_user=".$id);
-        $db->execute();
-        return getRobotLinksList();
-    }elseif ($type == 'robot'){
-        $db = ConnectBDD()->prepare("delete from ROBOT where id=".$id);
-        $db->execute();
-        return getRobotList();
-    }elseif ($type == 'user'){
-        $db = ConnectBDD()->prepare("delete from USER where id=".$id);
-        $db->execute();
-        return getUserlist();
+    if($_SESSION['status'] == "admin"){
+        if($type == 'link'){
+            $db = ConnectBDD()->prepare("delete from USER_ROBOT where id_user=".$id);
+            $db->execute();
+            return getRobotLinksList();
+        }elseif ($type == 'robot'){
+            $db = ConnectBDD()->prepare("delete from ROBOT where id=".$id);
+            $db->execute();
+            return getRobotList();
+        }elseif ($type == 'user'){
+            $db = ConnectBDD()->prepare("delete from USER where id=".$id);
+            $db->execute();
+            return getUserlist();
+        }else{
+            send('contenu', 'Oops, something went wrong');
+        }
     }else{
-        send('contenu', 'Oops, something went wrong');
+        send('variable', 'Nice try');
     }
 }
 //__________________________________________________creerVideos_________________________________________________________
-
+//Displays the videos of your robot
 function creerVideos () {
 	//$dir    = './../picturesBackUp/motion/*.avi';
 	$dir    = './IMG/motion/*.avi';
@@ -424,40 +458,48 @@ function creerVideos () {
 }
 
 //__________________________________________________traiter request_____________________________________________________
-
+//Used to manage clicks in the site
 function traiteRequest($rq) {
     send('contenu', '');
 
     switch ($rq){
         case 'home' :
+            //Back to the portal's home
             send('contenu', chargeAccueil());
             if($_SESSION['is']['connected'] == 1){
                 send('user', ' ' . ucfirst($_SESSION['username']));
             }
             break;
         case 'contact' :
+            //Contact page
             send('contenu', chargeTemplate($rq));
             break;
-        case 'video' :
+        case 'controls' :
+            //Controls page
             if(checkLinkedRobots()){
                 send('contenu', chargeTemplate($rq));
             }else{
                 send('contenu', chargeTemplate('noLinkedRobot'));
             }
             break;
-        case 'adminRobot' :
+        case 'robotLink' :
+            //Controls page
             send('contenu', chargeTemplate($rq));
             break;
-        case 'chat':
+        case 'forum':
+            //Opens forum
             send('contenu', chargeTemplate($rq));
             break;
         case 'testForm' :
+            //Manage forms
             send('contenu', traiteForm());
             break;
         case 'login' :
+            //Sign in page
             send('contenu', chargeTemplate($rq));
             break;
         case 'logout' :
+            //Disconection
             $_SESSION['is']['connected'] = 0;
             $_SESSION['user'] = '';
             $_SESSION['status'] = '';
@@ -465,19 +507,28 @@ function traiteRequest($rq) {
             creeConnectedMenu();
             break;
         case 'signup' :
+            //Sign up page
             send('contenu', chargeTemplate($rq));
             break;
         case 'users':
+            //Admin use users list
             getUserlist();
             break;
         case 'robots':
+            //Admin use robots list
             getRobotList();
             break;
         case 'robotLinks':
+            //Admin use links list
             getRobotLinksList();
             break;
         case 'startPageViewed':
-            $_SESSION['startPageViewed'] = true;
+            //Set session variable
+            if($_SESSION['startPageViewed']){
+                $_SESSION['startPageViewed'] = false;
+            }else{
+                $_SESSION['startPageViewed'] = true;
+            }
             break;
         case 'goToFirst':
             $_SESSION['startPageViewed'] = false;
@@ -489,9 +540,11 @@ function traiteRequest($rq) {
 		case 'right' :
         case 'auto':
         case 'stop':
+            //All the movements of Georges
 		    socket($rq);
 			break;
 		case 'mesVideos' :
+		    //Dipslays the saved videos
             if(checkLinkedRobots()){
                 send('contenu', creerVideos());
             }else{
@@ -500,6 +553,7 @@ function traiteRequest($rq) {
             $titrePage = 'Georgesecurity - Videos';
 			break;
         case 'deleteFromDb':
+            //Delete from database
             deleteFromDb();
             break;
         default : send('contenu', 'Requête inconnue : '.$_GET['rq']);

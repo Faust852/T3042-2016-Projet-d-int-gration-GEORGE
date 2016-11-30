@@ -31,10 +31,10 @@ if (isset ($_GET['rq'])) {
 
 else {
     creeConnectedMenu();
-    if($_SESSION['startPageViewed'] == true){
-        include 'INC/layout.html.inc.php';
-    }else{
+    if($_SESSION['startPageViewed'] == false){
         include 'INC/startPage.template.inc.php';
+    }else{
+        include 'INC/layout.html.inc.php';
     }
 }
 

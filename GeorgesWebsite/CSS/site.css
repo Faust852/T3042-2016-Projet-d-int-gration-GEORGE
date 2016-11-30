@@ -6,7 +6,6 @@ body {
 
 #contenu {
     color: #363B29;
-    background: white;
     margin-top: 50px;
 }
 
@@ -168,6 +167,7 @@ fieldset {
     width: 100%;
     text-align: center;
     margin-top: 10px;
+    margin-bottom: 30px;
 }
 
 #divLeftArrow, #divRightArrow{
@@ -255,4 +255,8 @@ fieldset {
 
 .ui-widget-content{
     border:none;
+}
+
+#divContainer{
+    text-align:center;
 }

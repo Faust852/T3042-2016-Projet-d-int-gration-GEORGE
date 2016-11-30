@@ -3,7 +3,7 @@
 </p>
 <p class="soumission">
     <button class="submitButton">
-        <a id="chatLink" class="muut" href="https://muut.com/i/georges-community">Forum</a>
+        <a id="chatLink" class="muut" href="https://muut.com/i/georges-community"></a>
     </button>
 </p>
 <!--<a id="chatLink" class="muut" href="https://muut.com/i/georges-community">georges-community</a>-->

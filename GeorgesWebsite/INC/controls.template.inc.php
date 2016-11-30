@@ -1,9 +1,5 @@
 	<div id="videoDiv">
 		<img src="http://185.14.186.97/motion/" alt="Le raspberry est éteint. ">
-		<p>
-			Vous êtes sur un ordinateur ! Génial, utilisez les flèches du clavier pour déplacer Georges!
-		</p>
-
 	</div>
 
 	<div id="divUpArrow"><button class="crossButtons" onclick="sendStop();" onmousedown="sendKey('up');" onmouseup="sendStop();"><span class="spanArrow">&#8593;</span></button></div>
@@ -13,6 +9,6 @@
 
 
 	<p class="soumission">
-		<button class="submitButton" id="autoButton" onclick="sendAuto();"><span>Mode automatique</span></button>
+		<button id="autoButton" class="w3-center w3-btn w3-white w3-border w3-round-large w3-light-grey" onclick="sendAuto();"><span>Mode automatique</span></button>
 	</p>
 

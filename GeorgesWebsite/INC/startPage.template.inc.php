@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
-<title>Georgesecurity - Home page</title>
+<title>Georgesecurity - Home pages</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="./CSS/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script
-<script src="./JS/jquery.slicknav.js"></script>
+<script
+    src="http://code.jquery.com/jquery-1.10.2.min.js"
+    integrity="sha256-C6CB9UYIS9UJeqinPHWTHVqh/E1uhG5Twh+Y5qFQmYg="
+    crossorigin="anonymous"></script>
+<script
+    src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+    integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+    crossorigin="anonymous"></script>
 <script src='./JS/index.js'></script>
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -57,15 +62,11 @@
     }
 
     /* First image (Logo. Full height) */
-    .bgimg-1 {
-        background-image: url("../IMG/Georges3-min.JPG");
-        min-height: 100%;
-    }
 
-    .bgimg-2{
+    /*.bgimg-2{
         background-image: url("../IMG/ecoFriendly-min.jpg");
         min-height: 70%;
-    }
+    }*/
 
     .w3-wide {letter-spacing: 10px;}
     .w3-hover-opacity {cursor: pointer;}
@@ -82,8 +83,8 @@
 <!-- Navbar (sit on top) -->
 <div class="w3-top">
     <ul class="w3-navbar" id="myNavbar">
-        <li style="color: black"><a href="#">HOME</a></li>
-        <li style="float: right; color: black;"><a href="index.php" onclick='startPageViewed();'>Go to portal</a></li>
+        <li style="color: black;background-color: rgba(255, 255, 255, 0.56)"><a href="#">Home page</a></li>
+        <li style="float: right;;background-color:rgba(255, 255, 255, 0.56); color: black;"><a href="javascript:void(startPageViewed());">Go to portal</a></li>
     </ul>
 </div>
 
@@ -115,21 +116,25 @@
                 This project was brought to life by Dimitri Verdonck, Cyril Wastchenko, Marco Peters, Simon Ponchau, David Micciche and Adrien Culem.</p>
         </div>
     </div>
-    <p class="w3-large w3-center w3-padding-16">Im really good at:</p>
-    <p class="w3-wide">Securing your house</p>
+    <p class="w3-large w3-center w3-padding-16">I'm really good at:</p>
+    <p class="w3-myfont w3-xlarge">Securing your house</p>
     <div class="w3-progress-container">
         <div class="w3-progressbar" style="width:100%"></div>
     </div>
-    <p class="w3-wide">Making sure your house is fine</p>
+    <p class="w3-myfont w3-xlarge">Making sure your house is fine</p>
     <div class="w3-progress-container">
         <div class="w3-progressbar" style="width:100%"></div>
     </div>
-    <p class="w3-wide">Preventing your house from being robbed</p>
+    <p class="w3-myfont w3-xlarge">Preventing your house from being robbed</p>
     <div class="w3-progress-container">
         <div class="w3-progressbar" style="width:100%"></div>
     </div>
+
+    <p style="text-align: center; margin-top: 60px"t>If you want to connect yourself or create an account for Georges. Go to the portal right here.</p>
+    <h3 class="w3-center"><a href="javascript:void(0);" onclick='startPageViewed();'>Go to portal</a></h3>
+
 </div>
-<div class="bgimg-2 w3-display-container">
+<!--<div class="bgimg-2 w3-display-container">
 </div>
 <div class="w3-content w3-container w3-padding-64">
     <h3 class="w3-center">Eco friendly</h3>
@@ -137,12 +142,14 @@
     <div class="w3-col m6 w3-padding-large w3-center">
         <p>Yet to be written</p>
     </div>
-</div>
+</div>-->
 <!-- Footer -->
 <footer class="w3-center w3-black w3-padding-16 w3-opacity w3-hover-opacity-off">
-    <div class="w3-xlarge w3-padding-32">
-        <!--<a href="https://twitter.com/georgesecurity1" class="w3-hover-text-indigo"><i class="fa fa-facebook-official"></i></a>-->
+    <div class="w3-xlarge">
         <a href="https://twitter.com/georgesecurity1" class="w3-hover-text-light-blue"><i class="fa fa-twitter"></i></a>
+    </div>
+    <div>
+        Contact us at : <a href="mailto:info@georgesecurity.me" target="_top"> info@georgesecurity.me</a>
     </div>
 </footer>
 

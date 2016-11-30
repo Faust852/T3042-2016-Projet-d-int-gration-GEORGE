@@ -1,9 +1,9 @@
-//Made by Adrien Culem
-function traiteRetour(objetJS){
-    $.map( objetJS, function(val, i) {
+//
+function traiteRetour(objetJS) {
+    //What is returned from the php
+    $.map(objetJS, function (val, i) {
         switch (i) {
             case 'menu' :
-                //$('.' + 'slicknav_nav').html(val);
                 location.reload();
                 break;
             case 'mdpConcord':
@@ -25,7 +25,7 @@ function traiteRetour(objetJS){
                 $('#' + i).html(objetJS[i]);
                 break;
             case 'connectionFailed':
-                $('#' + i).css( "display", "block" )
+                $('#' + i).css("display", "block")
                 $('#' + i).html('<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>' + ' ' + objetJS[i]);
                 break;
             case 'variable':
@@ -44,27 +44,26 @@ function traiteRetour(objetJS){
 
 }
 
-function mailOk(mail){
-    var reg = new RegExp('^[a-z0-9]+([_|\.|-]{1}[a-z0-9]+)*@[a-z0-9]+([_|\.|-]{1}[a-z0-9]+)*[\.]{1}[a-z]{2,6}$', 'i');
-    return reg.test(mail);
-}
-
 function sendKey(e){
+    //Send movements to georges
     $.get('index.php', 'rq=' + e, function (result) {
     });
 }
 
 function sendStop(){
+    //Send stop to georges
     $.get('index.php', 'rq=stop', function (result) {
     });
 }
 
 function sendAuto() {
+    //Set auto mode for Georges
     $.get('index.php', 'rq=auto', function (result) {
     });
 }
 
 function sendId(id, type){
+    //Admin used
     $('#popUpDialog').css('display: block');
     $('#popUpDialog').dialog({
         modal: true,
@@ -93,13 +92,18 @@ function sendId(id, type){
 }
 
 function startPageViewed(){
+    //For users not to see the presentation website when they are connected
     $.get('index.php', 'rq=startPageViewed', function (result) {
     });
+    setTimeout(function(){
+        location.reload();
+    }, 100);
 }
-var no4tabs = 0;
+
 function menuClick(a){
     e = $(a);
     var rq= e.attr('href').split('.')[0];
+    //Show the right title
     switch(rq) {
         case 'users':
             document.title = 'Georgesecurity - Users';
@@ -120,12 +124,12 @@ function menuClick(a){
             document.title = 'Georgesecurity - Contact';
             break;
         case 'home':
-            document.title = 'Georgesecurity - Home';
+            document.title = 'Georgesecurity - Portal';
             break;
-        case 'video':
+        case 'controls':
             document.title = 'Georgesecurity - Controls';
             break;
-        case 'adminRobot':
+        case 'robotLink':
             document.title = 'Georgesecurity - Link your robot';
             break;
         case 'mesVideos':
@@ -133,17 +137,9 @@ function menuClick(a){
             break;
 
     }
-    //For firefox
-    if(rq == "chat") {
-        if (no4tabs == 0) {
-            newTab();
-            no4tabs++;
-            if (typeof InstallTrigger !== 'undefined') {
-                location.reload();
-            }
-        } else {
-            no4tabs = 0;
-        }
+    //open new tab with forum
+    if(rq == "forum") {
+        newTab();
     }else{
         $.get('index.php', 'rq=' + rq, function (result) {
             traiteRetour(JSON.parse(result));
@@ -153,24 +149,55 @@ function menuClick(a){
 }
 
 function sendForm(a){
+    //Send forms to php
     var rq = $(a).attr('action').split('.')[0];
-    console.log(rq);
+    var formType = $(a).attr('id');
     var monFormData = new FormData($('form')[0]);
-    $.ajax({
-        url: 'index.php?' + 'rq=' + rq + '&submit=' + $(a).attr('id'),
-        type: 'POST',
-        data: monFormData,
-        contentType: false,
-        processData: false,
-        dataType: 'html',
-        success: function (data) {
-            traiteRetour(JSON.parse(data));
+    if(formType == "sendNewAccount"){
+        var x = 0;
+        var y = '';
+        if($("#signupPassword").val() !== $("#verifMdp").val()){
+            x++;
+            y += 'Les mots de passes sont différents';
         }
-    });
+        if($("#email").val() !== $("#verifEmail").val()){
+            x++;
+            y += '<br>Les emails sont différentes';
+        }
+        if(x > 0){
+            $('#connectionFailed').css("display", "block");
+            $('#connectionFailed').html('<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' + y);
+        }else{
+            $.ajax({
+                url: 'index.php?' + 'rq=' + rq + '&submit=' + formType,
+                type: 'POST',
+                data: monFormData,
+                contentType: false,
+                processData: false,
+                dataType: 'html',
+                success: function (data) {
+                    traiteRetour(JSON.parse(data));
+                }
+            });
+        }
+    }else{
+        $.ajax({
+            url: 'index.php?' + 'rq=' + rq + '&submit=' + formType,
+            type: 'POST',
+            data: monFormData,
+            contentType: false,
+            processData: false,
+            dataType: 'html',
+            success: function (data) {
+                traiteRetour(JSON.parse(data));
+            }
+        });
+    }
     return false;
 }
 
 function newTab() {
+    //Create the new tab
     var form = document.createElement("form");
     form.method = "GET";
     form.action = "http://georgesecurity.me/chat.html";
@@ -180,6 +207,7 @@ function newTab() {
 }
 
 function sideMenu() {
+    //Shows side menu and hide big one
     var x = document.getElementById("demo");
     if (x.className.indexOf("w3-show") == -1) {
         x.className += " w3-show";
@@ -189,5 +217,8 @@ function sideMenu() {
 }
 
 function capitalizeFirstLetter(string) {
+    //Capitalize first letter of a string
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+
