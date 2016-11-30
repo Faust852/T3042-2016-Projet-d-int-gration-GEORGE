@@ -1,4 +1,3 @@
-/*By Adrien Culem*/
 body {
     color: #F0E39E;
     background: #DCDCDC;
@@ -260,4 +259,10 @@ fieldset {
 
 #divContainer{
     text-align:center;
+}
+
+.addRobotsDivLeft{
+    width: 31%;
+    margin-left: 5px;
+    float: left;
 }

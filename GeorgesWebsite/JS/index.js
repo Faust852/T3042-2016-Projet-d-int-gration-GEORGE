@@ -1,4 +1,4 @@
-//By Adrien Culem and Simon Ponchau
+//
 function traiteRetour(objetJS) {
     //What is returned from the php
     $.map(objetJS, function (val, i) {
@@ -30,6 +30,9 @@ function traiteRetour(objetJS) {
                 break;
             case 'variable':
                 console.log(objetJS[i]);
+                break;
+            case 'actualId':
+                $('#' + i).html(objetJS[i]);
                 break;
             case 'dataTable':
                 $('#' + objetJS[i]).DataTable();
@@ -75,7 +78,6 @@ function sendId(id, type){
                 text: 'Yes, proceed!',
                 open: function() { $(this).addClass('yescls') },
                 click: function() {$.get('index.php', 'rq=deleteFromDb&idDelete=' + id + '&type=' + type, function (result) {
-                    console.log(result);
                     traiteRetour(JSON.parse(result));
                 });
                     $(this).dialog("close");}
@@ -180,6 +182,19 @@ function sendForm(a){
                 }
             });
         }
+    }else if(formType == "sendAddRobots"){
+        console.log(counter);
+        $.ajax({
+            url: 'index.php?' + 'rq=' + rq + '&submit=' + formType + '&counter=' + counter,
+            type: 'POST',
+            data: monFormData,
+            contentType: false,
+            processData: false,
+            dataType: 'html',
+            success: function (data) {
+                traiteRetour(JSON.parse(data));
+            }
+        });
     }else{
         $.ajax({
             url: 'index.php?' + 'rq=' + rq + '&submit=' + formType,
@@ -221,4 +236,29 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+var counter = 0;
+function duplicateFields(){
+    $('#addRobotsFields').append(
+        '<div class="w3-row w3-section addRobotsDivLeft">' +
+            '<div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-user"></i></div>' +
+            '<div class="w3-rest">' +
+                '<input class="w3-input w3-border" type="text" name="robotID' + counter +'" id="robotID' + counter +'" placeholder="robotID" required>' +
+            '</div>' +
+        '</div>' +
 
+        '<div class="w3-row w3-section addRobotsDivLeft">' +
+            '<div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-lock"></i></div>' +
+            '<div class="w3-rest">' +
+                '<input class="w3-input w3-border" type="password"  name="robotPsw' + counter +'" id="robotPsw' + counter +'" placeholder="robotPsw" required>' +
+            '</div>' +
+        '</div>' +
+
+        '<div class="w3-row w3-section addRobotsDivLeft">' +
+            '<div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-lock"></i></div>' +
+            '<div class="w3-rest">' +
+                '<input class="w3-input w3-border" type="text" name="robotIP' + counter +'" id="robotIP' + counter +'" placeholder="robotIP" required>' +
+            '</div>' +
+        '</div>'
+    )
+    counter++;
+}

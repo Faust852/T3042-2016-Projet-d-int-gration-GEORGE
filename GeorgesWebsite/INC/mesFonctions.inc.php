@@ -149,7 +149,7 @@ function creeMenu ($tabMenu, $a) {
                 $htmlMenu.='<li style="width:'.$a.'%; text-align: center"><a onclick="return menuClick(this)" href='.$value.' id= o_'.$titreOnglet.'>'.$content.'</a></li>';
             }elseif($titreOnglet == "Homepage") {
                 //To go back on presentation website
-                $htmlMenu.='<li style="width:'.$a.'%; text-align: center"><a href="javascript:void(startPageViewed());" id= o_'.$titreOnglet.'>'.$content.'</a></li>';
+                $htmlMenu.='<li style="width:'.$a.'%;text-align: center" class="w3-hide-small"><a href="javascript:void(startPageViewed());" id= o_'.$titreOnglet.'>'.$content.'</a></li>';
             }
             else{
                 $htmlMenu.='<li style="width:'.$a.'%; text-align: center" class="w3-hide-small"><a onclick="return menuClick(this)" href='.$value.' id= o_'.$titreOnglet.'>'.$content.'</a></li>';
@@ -179,7 +179,7 @@ function creeMenu ($tabMenu, $a) {
             }elseif($titreOnglet == 'Portal'){
                 //So the portal is not displayed twice (Since it stays even in small format)
             }elseif($titreOnglet == "Homepage") {
-                $htmlMenu.='<li style="width:'.$a.'%; text-align: center"><a href="javascript:void(startPageViewed());" id= o_'.$titreOnglet.'>'.$content.'</a></li>';
+                $htmlMenu.='<li style="width:'.$a.'%;"><a href="javascript:void(startPageViewed());" id= o_'.$titreOnglet.'>'.$content.'</a></li>';
             }
             else{
                 $htmlMenu.='<li><a onclick="sideMenu(); return menuClick(this);" href='.$value.' id= o_'.$titreOnglet.'>'.$content.'</a></li>';
@@ -301,12 +301,30 @@ function traiteForm(){
         case 'sendNewAccount':
             $return = newUser();
             break;
+        case 'sendAddRobots':
+            $return = newRobot();
+            break;
         case 'sendRobot' :
             $return = linkRobot();
             break;
         default : $return = getFormInfo();
     }
     return $return;
+}
+//-------------------------------------------------Add robots-----------------------------------------------------------
+function newRobot(){
+    $counter = $_GET['counter'];
+    if($_SESSION["status"] == "admin"){
+        for($i=0;$i<=$counter; $i++){
+            $id = $_POST["robotID".$i];
+            $mdp = $_POST["robotPsw".$i];
+            $ip = $_POST["robotIP".$i];
+            $sections = ConnectBDD()->prepare("INSERT INTO ROBOT (id, mdp, ip)
+                                       VALUES (:id, :mdp, :ip)");
+            $sections->execute(array(':id' => $id, ':mdp' => $mdp, ':ip' => $ip));
+        }
+    }
+    return '<h2 class="w3-center">Robots ajouté</h2>';
 }
 //________________________________________________ If robot is linked___________________________________________________
 //Just to check if you are linked with a robot
@@ -325,8 +343,8 @@ function checkLinkedRobots(){
 function socket ($socket) {
     $idRobot = ConnectBDD()->prepare("SELECT ip FROM ROBOT where id = (SELECT id_robot FROM USER_ROBOT where id_user=".$_SESSION['user'].")");
 	$idRobot->execute();
-  $idRobotAnswer = $idRobot->fetchAll(PDO::FETCH_ASSOC);
-  $host = $idRobotAnswer[0]['ip'];
+    $idRobotAnswer = $idRobot->fetchAll(PDO::FETCH_ASSOC);
+    $host = $idRobotAnswer[0]['ip'];
 	$port = 62900;
 	$output=$socket;
 	$socket1 = socket_create(AF_INET, SOCK_STREAM,0) or die("Could not create socket\n");
@@ -452,11 +470,17 @@ function creerVideos () {
 
 
 
-    //$files1 = scandir($dir);
+//$files1 = scandir($dir);
 
 	return $retour;
 }
-
+//----------------------------------------Actual id for robots----------------------------------------------------------
+function getActualId(){
+    $db = ConnectBDD()->prepare("select max(id) from ROBOT");
+    $db->execute();
+    $sectionTab = $db->fetchAll(PDO::FETCH_ASSOC);
+    return $sectionTab[0]['id'];
+}
 //__________________________________________________traiter request_____________________________________________________
 //Used to manage clicks in the site
 function traiteRequest($rq) {
@@ -555,6 +579,12 @@ function traiteRequest($rq) {
         case 'deleteFromDb':
             //Delete from database
             deleteFromDb();
+            break;
+        case "addRobots":
+            $actualId = getActualId();
+            send("actualId", $actualId);
+            send('variable', $actualId);
+            send('contenu', chargeTemplate($rq));
             break;
         default : send('contenu', 'Requête inconnue : '.$_GET['rq']);
     }
