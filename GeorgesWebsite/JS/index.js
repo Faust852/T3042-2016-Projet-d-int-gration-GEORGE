@@ -1,4 +1,4 @@
-//
+//Coded by Adrien Culem
 function traiteRetour(objetJS) {
     //What is returned from the php
     $.map(objetJS, function (val, i) {
