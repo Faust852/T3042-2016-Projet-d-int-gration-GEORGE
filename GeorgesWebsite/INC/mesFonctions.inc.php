@@ -66,7 +66,7 @@ function newUser()
         return chargeTemplate('signup');
     }
 }
-//__________________________________________________gestion login_______________________________________________________
+//__________________________________________________Login Management_______________________________________________________
 // Allow users to connect
 function gestionLogin() {
     $username = $_POST['username'];
@@ -91,7 +91,7 @@ function gestionLogin() {
     //}
 }
 
-//______________________________________________________Lier un robot et un user _________________________________________
+//______________________________________________________Link user to robot_________________________________________
 //Allow a user to link with his robot
 function linkRobot(){
     $id = $_POST['robot_id'];
@@ -117,7 +117,7 @@ function linkRobot(){
 }
 
 
-//______________________________________________________creer menu________________________________________________________
+//______________________________________________________Create Menus________________________________________________________
 //☰
 //Create all the menus (Small format, and desktop format)
 function creeMenu ($tabMenu, $a) {
@@ -194,7 +194,7 @@ function creeMenu ($tabMenu, $a) {
     return $htmlMenu;
 }
 
-//______________________________________________________mon print_______________________________________________________
+//______________________________________________________Print format_______________________________________________________
 //Simple array format
 function monPrint_r ($tab){
     $chaine = '<pre>';
@@ -204,7 +204,7 @@ function monPrint_r ($tab){
 }
 
 
-//______________________________________________________charger Accueil________________________________________________
+//______________________________________________________Load home________________________________________________
 //Load adapted message on the portal (If you are connected or not)
 function chargeAccueil (){
     if($_SESSION['is']['connected'] == 1){
@@ -216,7 +216,7 @@ function chargeAccueil (){
     return $temp;
 }
 
-//______________________________________________________charger template________________________________________________
+//______________________________________________________Load template________________________________________________
 // Load .template.inc.php files
 function chargeTemplate ($t){
     $file = file('INC/'.$t.'.template.inc.php');
@@ -228,7 +228,7 @@ function chargeTemplate ($t){
     return implode ('', $file);
 }
 
-//___________________________________________________Afficher info formulaire___________________________________________
+//___________________________________________________Show form infos___________________________________________
 //Use in debuging (Shows a form informations)
 function getFormInfo() {
     $liste = ['_GET'=>$_GET, '_POST'=>$_POST, '_FILES'=>$_FILES];
@@ -288,7 +288,7 @@ function send($location, $text) {
     global $envoi;
     $envoi[$location] = $text;
 }
-//__________________________________________________ Traiter les formulaires ___________________________________________
+//__________________________________________________Forms management ___________________________________________
 //Do the right thing for the right submit
 function traiteForm(){
     if(!isset($_GET['submit'])){
@@ -452,7 +452,7 @@ function deleteFromDb(){
         send('variable', 'Nice try');
     }
 }
-//__________________________________________________creerVideos_________________________________________________________
+//__________________________________________________Displays the videos_________________________________________________________
 //Displays the videos of your robot
 function creerVideos () {
 	//$dir    = './../picturesBackUp/motion/*.avi';
@@ -481,7 +481,7 @@ function getActualId(){
     $sectionTab = $db->fetchAll(PDO::FETCH_ASSOC);
     return $sectionTab[0]['id'];
 }
-//__________________________________________________traiter request_____________________________________________________
+//_________________________________________________On clicks in page_____________________________________________________
 //Used to manage clicks in the site
 function traiteRequest($rq) {
     send('contenu', '');
