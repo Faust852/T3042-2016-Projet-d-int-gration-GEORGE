@@ -99,7 +99,7 @@ function startPageViewed(){
     });
     setTimeout(function(){
         location.reload();
-    }, 100);
+    }, 500);
 }
 
 function menuClick(a){

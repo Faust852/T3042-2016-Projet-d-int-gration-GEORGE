@@ -4,7 +4,7 @@ include 'tableau.php';
 //______________________________________________________ConnectBDD______________________________________________________
 // Connection to the database
 function ConnectBDD (){
-    $host = "";
+    $host = '';
     $dbname = '';
     $user = '';
     $pswd = '';
@@ -95,7 +95,7 @@ function gestionLogin() {
 //Allow a user to link with his robot
 function linkRobot(){
     $id = $_POST['robot_id'];
-    $mdp = $_POST['robot_password'];
+    $mdp = md5($_POST['robot_password']);
     $userCo = $_SESSION['user'];
 
     $sections = ConnectBDD()->prepare("select mdp
@@ -104,11 +104,11 @@ function linkRobot(){
     $sections->execute(array(':id' => $id));
 
     $sectionTab = $sections->fetchAll(PDO::FETCH_ASSOC);
-    //Check if passwords are the same (Should be encrypted)
+    //Check if passwords are the same (md5 encrypted)
     if($mdp == $sectionTab[0]['mdp']){
         $results = ConnectBDD()->prepare("INSERT INTO USER_ROBOT(id_user, id_robot) VALUES (:id_user, :id_robot)");
         $results->execute(array(':id_user' => $userCo, ':id_robot' => $id));
-        return "Votre robot vous est désormais lié!";
+        return "<h1 class='signLogP'>Votre robot vous est désormais lié!</h1>";
     }else{
         //if not send error
         send('connectionFailed', "Le mot de passe ou l'id est incorrect");
@@ -321,7 +321,7 @@ function newRobot(){
             $ip = $_POST["robotIP".$i];
             $sections = ConnectBDD()->prepare("INSERT INTO ROBOT (id, mdp, ip)
                                        VALUES (:id, :mdp, :ip)");
-            $sections->execute(array(':id' => $id, ':mdp' => $mdp, ':ip' => $ip));
+            $sections->execute(array(':id' => $id, ':mdp' => md5($mdp), ':ip' => $ip));
         }
     }
     return '<h2 class="w3-center">Robots ajouté</h2>';

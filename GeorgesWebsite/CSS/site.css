@@ -1,7 +1,8 @@
+/*By Adrien Culem*/
 body {
     color: #F0E39E;
     background: #DCDCDC;
-    font-family: Calibri;
+    font-family: sans-serif;
 }
 
 #contenu {
@@ -66,7 +67,8 @@ input[type=submit] {
 
 .contactDiv2{
     margin: 10px 10px 10px 10px;
-    float: left;
+    display: inline-block;
+    width: 300px;
 }
 
 #contenu {
@@ -159,6 +161,15 @@ fieldset {
     width: 50px;
 }
 
+.centerControlsDivs{
+    width: 50px;
+    height: 52px;
+}
+
+.middleControls{
+    margin: 10px;
+}
+
 .spanArrow{
     font-size: 35px;
 }
@@ -183,6 +194,10 @@ fieldset {
 
 #divRightArrow{
     float: right;
+}
+
+#divCenterArrow{
+
 }
 
 #buttonLeftArrow{
@@ -265,4 +280,9 @@ fieldset {
     width: 31%;
     margin-left: 5px;
     float: left;
+}
+
+#contactContainer{
+    width: 100%;
+    text-align: center;
 }

@@ -2,6 +2,9 @@
     <form method ='post' action="testForm.php" onsubmit="return sendForm(this)" id="sendRobot" class="w3-container w3-card-4 w3-light-grey w3-text-black w3-margin">
         <h2 class="w3-center">Link to your robot</h2>
 
+        <div id="connectionFailed" class="w3-center">
+        </div>
+
         <div class="w3-row w3-section">
             <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-user"></i></div>
             <div class="w3-rest">

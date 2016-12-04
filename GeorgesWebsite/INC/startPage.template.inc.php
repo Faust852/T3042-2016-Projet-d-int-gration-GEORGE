@@ -91,7 +91,7 @@
 <!-- First Parallax Image with Logo Text -->
 <div class="bgimg-1 w3-display-container">
     <div class="w3-display-middle" style="white-space:nowrap;">
-        <span class="w3-center w3-padding-xlarge w3-black w3-xlarge w3-wide w3-animate-opacity"><span>Georges</span></span>
+        <span style="color: black;background-color: rgba(255, 255, 255, 0.56)" class="w3-center w3-padding-xlarge w3-xlarge w3-wide w3-animate-opacity"><span>Georges</span></span>
     </div>
 </div>
 
