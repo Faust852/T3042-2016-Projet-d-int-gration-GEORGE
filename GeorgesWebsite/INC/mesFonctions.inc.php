@@ -66,7 +66,7 @@ function newUser()
         return chargeTemplate('signup');
     }
 }
-//__________________________________________________Login Management_______________________________________________________
+//__________________________________________________gestion login_______________________________________________________
 // Allow users to connect
 function gestionLogin() {
     $username = $_POST['username'];
@@ -82,6 +82,11 @@ function gestionLogin() {
         $_SESSION['user'] = $sectionTab[0]['id'];
         $_SESSION['status'] = $sectionTab[0]['status'];
         $_SESSION['username'] = $sectionTab[0]['pseudo'];
+        $_SESSION['userHash'] = $sectionTab[0]['mdp'];
+        try{
+            checkLinkedRobots();
+        }catch(Exception $e){
+        };
         creeConnectedMenu();
     } else {
         //if not, send error
@@ -91,7 +96,7 @@ function gestionLogin() {
     //}
 }
 
-//______________________________________________________Link user to robot_________________________________________
+//______________________________________________________Lier un robot et un user _________________________________________
 //Allow a user to link with his robot
 function linkRobot(){
     $id = $_POST['robot_id'];
@@ -104,11 +109,15 @@ function linkRobot(){
     $sections->execute(array(':id' => $id));
 
     $sectionTab = $sections->fetchAll(PDO::FETCH_ASSOC);
-    //Check if passwords are the same (md5 encrypted)
+    //Check if passwords are the same (Should be encrypted)
     if($mdp == $sectionTab[0]['mdp']){
         $results = ConnectBDD()->prepare("INSERT INTO USER_ROBOT(id_user, id_robot) VALUES (:id_user, :id_robot)");
         $results->execute(array(':id_user' => $userCo, ':id_robot' => $id));
         return "<h1 class='signLogP'>Votre robot vous est désormais lié!</h1>";
+        try{
+            checkLinkedRobots();
+        }catch(Exception $e){
+        }
     }else{
         //if not send error
         send('connectionFailed', "Le mot de passe ou l'id est incorrect");
@@ -117,7 +126,7 @@ function linkRobot(){
 }
 
 
-//______________________________________________________Create Menus________________________________________________________
+//______________________________________________________creer menu________________________________________________________
 //☰
 //Create all the menus (Small format, and desktop format)
 function creeMenu ($tabMenu, $a) {
@@ -194,7 +203,7 @@ function creeMenu ($tabMenu, $a) {
     return $htmlMenu;
 }
 
-//______________________________________________________Print format_______________________________________________________
+//______________________________________________________mon print_______________________________________________________
 //Simple array format
 function monPrint_r ($tab){
     $chaine = '<pre>';
@@ -204,7 +213,7 @@ function monPrint_r ($tab){
 }
 
 
-//______________________________________________________Load home________________________________________________
+//______________________________________________________charger Accueil________________________________________________
 //Load adapted message on the portal (If you are connected or not)
 function chargeAccueil (){
     if($_SESSION['is']['connected'] == 1){
@@ -216,7 +225,7 @@ function chargeAccueil (){
     return $temp;
 }
 
-//______________________________________________________Load template________________________________________________
+//______________________________________________________charger template________________________________________________
 // Load .template.inc.php files
 function chargeTemplate ($t){
     $file = file('INC/'.$t.'.template.inc.php');
@@ -228,7 +237,7 @@ function chargeTemplate ($t){
     return implode ('', $file);
 }
 
-//___________________________________________________Show form infos___________________________________________
+//___________________________________________________Afficher info formulaire___________________________________________
 //Use in debuging (Shows a form informations)
 function getFormInfo() {
     $liste = ['_GET'=>$_GET, '_POST'=>$_POST, '_FILES'=>$_FILES];
@@ -288,7 +297,7 @@ function send($location, $text) {
     global $envoi;
     $envoi[$location] = $text;
 }
-//__________________________________________________Forms management ___________________________________________
+//__________________________________________________ Traiter les formulaires ___________________________________________
 //Do the right thing for the right submit
 function traiteForm(){
     if(!isset($_GET['submit'])){
@@ -329,10 +338,14 @@ function newRobot(){
 //________________________________________________ If robot is linked___________________________________________________
 //Just to check if you are linked with a robot
 function checkLinkedRobots(){
-    $idRobot = ConnectBDD()->prepare("SELECT id_robot FROM USER_ROBOT where id_user = ".$_SESSION['user']);
+    $idRobot = ConnectBDD()->prepare("select id_robot, mdp
+      from USER_ROBOT natural join ROBOT
+      where id_user =".$_SESSION['user']);
     $idRobot->execute();
     $idRobotAnswer = $idRobot->fetchAll(PDO::FETCH_ASSOC);
     if($idRobotAnswer){
+        $_SESSION['robotId'] = $idRobotAnswer[0]['id_robot'];
+        $_SESSION['robotPasswd'] = $idRobotAnswer[0]['mdp'];
         return true;
     }else{
         return false;
@@ -452,7 +465,7 @@ function deleteFromDb(){
         send('variable', 'Nice try');
     }
 }
-//__________________________________________________Displays the videos_________________________________________________________
+//__________________________________________________creerVideos_________________________________________________________
 //Displays the videos of your robot
 function creerVideos () {
 	//$dir    = './../picturesBackUp/motion/*.avi';
@@ -481,7 +494,7 @@ function getActualId(){
     $sectionTab = $db->fetchAll(PDO::FETCH_ASSOC);
     return $sectionTab[0]['id'];
 }
-//_________________________________________________On clicks in page_____________________________________________________
+//__________________________________________________traiter request_____________________________________________________
 //Used to manage clicks in the site
 function traiteRequest($rq) {
     send('contenu', '');
@@ -501,7 +514,9 @@ function traiteRequest($rq) {
         case 'controls' :
             //Controls page
             if(checkLinkedRobots()){
-                send('contenu', chargeTemplate($rq));
+                $templateControl = chargeTemplate($rq);
+                $control = str_replace('#motionURL' , $_SESSION['robotId']."/".$_SESSION['robotPasswd']."/", $templateControl );
+                send('contenu', $control);
             }else{
                 send('contenu', chargeTemplate('noLinkedRobot'));
             }

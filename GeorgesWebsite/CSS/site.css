@@ -286,3 +286,20 @@ fieldset {
     width: 100%;
     text-align: center;
 }
+@media screen and (max-width: 1025px){
+    .mobileControls{
+        display: block;
+    }
+    .desktopControls{
+        display: none;
+    }
+}
+
+@media screen and (min-width: 1025px){
+    .mobileControls{
+        display: none;
+    }
+    .desktopControls{
+        display: block;
+    }
+}
