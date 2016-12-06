@@ -7,9 +7,11 @@ import smtplib
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
+############################################################################			
+#				-----Fonctions-----
+############################################################################			
 
-
-
+####################----SendMail----#####################
 def SendMail():
 	msg = MIMEMultipart()
 	msg['From'] = 'info@georgesecurity.me'
@@ -27,18 +29,91 @@ def SendMail():
 
 
 
+######################----Stop----#######################			
+
+#permet de mettre toutes les pins au niveau bas et de stopper les moteurs
+def Stop():
+	GPIO.output(11, False)
+	GPIO.output(13, False)
+	GPIO.output(15, False)
+	GPIO.output(12, False)
+
+######################----auto----#######################
+			
+#mode automatique : permet au robot de se deplacer seul
+def Auto():
+	GPIO_TRIGGER = 23
+	GPIO_ECHO    = 24
+	GPIO.setup(GPIO_TRIGGER,GPIO.OUT)  # Trigger
+	GPIO.setup(GPIO_ECHO,GPIO.IN)      # Echo
+	GPIO.output(GPIO_TRIGGER, False)
+
+	# temps afin de laisser le temps au module de s'activer
+	time.sleep(0.5)
+
+	# envoi d'un pulse de 10us au trigger
+	GPIO.output(GPIO_TRIGGER, True)
+	time.sleep(0.00001)
+	GPIO.output(GPIO_TRIGGER, False)
+	start = time.time()
+
+	sortir =0
+	distance = 300 #distance de 300 cm par defaut : le robot peut avancer
+
+	while GPIO.input(GPIO_ECHO)==0:
+		start = time.time()
+		#si la variable sortir deviens plus grande que 5000, on considere que
+		#le signal est perdu et on sort de la boucle
+		sortir+=1
+		if sortir > 5000 :
+			break
+
+	while GPIO.input(GPIO_ECHO)==1:
+		stop = time.time()
+
+
+	#on ne calcule la nouvelle distance que si on a bien recu un retour sur le echo
+	if sortir < 5000 :
+		# Calculer le temps du pulse
+		elapsed = stop-start
+
+		# calcul en fonction du temps et de la distance
+		distance = elapsed * 34300
+
+		# pour seulement l'aller
+		distance = distance / 2
+
+	#si la distance est plus petite que 65cm :
+	#- le robot s'arrete
+	#- il tourne pendant 0.1 seconde
+	if distance < 65:
+		Stop()
+		time.sleep(2)
+		GPIO.output(15, True)
+		time.sleep(0.1)
+
+	# si la distance devant lui est assez grande, il continue tout droit
+	else:
+		Stop()
+		GPIO.output(11, True)
+		GPIO.output(15, True)
+
+
+
+############################################################################			
+#				-----Initialisation-----
+############################################################################	
+
 
 s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
 host= '127.0.0.1'
 port=int(62900)
-global speed
-speed = 20 #vitesse de base
+
 global data
-global speedM1
-global speedM2
+
 distance=0
-data = ''
+data = ''	#signal recu par le serveur web
 
 
 s.bind(('',port))
@@ -51,35 +126,26 @@ GPIO.setup (13, GPIO.OUT) #M1_AR
 #M2 Left Side
 GPIO.setup (15, GPIO.OUT) #M2_AV
 GPIO.setup (12, GPIO.OUT) #M2_AR
-#PWM
-GPIO.setup (33, GPIO.OUT) #EN1 PWM
-GPIO.setup (35, GPIO.OUT) #EN2 PWM
 
 hz = 500 # frequence
-global motor1
-global motor2
-motor1 = GPIO.PWM(33, hz)
-motor2 = GPIO.PWM(35, hz)
 
 
-motor1.start(0)
-motor2.start(0)
-
+############################################################################			
+#				-----Threads-----
+############################################################################	
 
 class Listener(Thread):
 	
     def run(self):
 		while 1:
 			global data
-			print("test0")
+
 			s.listen(1)
 					
 			conn,addr =s.accept()
 
-			print (conn,addr)
 			data=conn.recv(100000)
 			data=data.decode("utf-8")
-			print("output : %s " %data)
 				
 
 class Controller(Thread):
@@ -87,24 +153,14 @@ class Controller(Thread):
     def run(self):
 		while 1:
 			global data
-			global speedM1
-			global speedM2
-			global speed
-			global motor1
-			global motor2
+
 		#MODE AUTO
 			
 			if data == 'auto':
-				print("test1")
-				#http://www.raspberrypi-spy.co.uk/archive/python/ultrasonic_1.py --> ULTRASONIC SENSOR
-				speedM1 = speed
-				speedM2 = speed
 				Auto()
 			
 		#MODE MANUEL
-			else:
-				print("output2 : %s " %data)
-				
+			else:				
 
 				if data=='up':
 					Stop()
@@ -149,127 +205,57 @@ class Alert(Thread):
 			GPIO.setup(GPIO_TRIGGER,GPIO.OUT)  # Trigger
 			GPIO.setup(GPIO_ECHO,GPIO.IN)      # Echo
 			GPIO.output(GPIO_TRIGGER, False)
-			print("test2")
-			# Allow module to settle
+
+			# temps afin de laisser le temps au module de s'activer
 			time.sleep(0.5)
 
-			# Send 10us pulse to trigger
+			# envoi d'un pulse de 10us au trigger
 			GPIO.output(GPIO_TRIGGER, True)
 			time.sleep(0.00001)
 			GPIO.output(GPIO_TRIGGER, False)
 			start = time.time()
-			print("test3")
+
 			while GPIO.input(GPIO_ECHO)==0:
 				start = time.time()
 
 			while GPIO.input(GPIO_ECHO)==1:
 				stop = time.time()
-			print("test4")
-			# Calculate pulse length
+
+			# Calculer le temps du pulse
 			elapsed = stop-start
 
-			# Distance pulse travelled in that time is time
-			# multiplied by the speed of sound (cm/s)
+			# calcul en fonction du temps et de la distance
 			distance = elapsed * 34300
-
-			# That was the distance there and back so halve the value
 			distance = distance / 2
 		
-		
+			#si les moteurs sont a l'arret
 			if data=='stop' or data=='':
+				#creation d'une liste afin de retrouver l'etat precedant
 				liste.append(distance)
-				print("distance : %d " %distance)
-				print ("j : %d " %j)
+				#si le tableau possede au moins deux valeurs
 				if j>0 :
+					#envoi d'un mail si la distance a change d'au moins 20cm
 					if (liste[j-1]-liste[j])>20 :
 						SendMail()
-						print ('alert')
-				
+				#remettre la liste a 0
 				if j > 100 : 
 					j=0
 				
 				j+=1
 				
 				
-				
+############################################################################			
+#				-----activer les Threads-----
+############################################################################				
 				
 			
 list = Listener()
 control = Controller()
 alert = Alert()
 
-'''list.daemon = True
-control.daemon = True
-alert.daemon = True '''
 
 list.start()
 control.start()
 alert.start()
-############################################################################			
-
-def Accelerate():
-	global speed
-	if speed < 100:
-		speed+=5
-		time.sleep(0.1)
-###########################################################################
-
-def Stop():
-	GPIO.output(11, False)
-	GPIO.output(13, False)
-	GPIO.output(15, False)
-	GPIO.output(12, False)
-
-###########################################################################
-def Auto():
-	GPIO_TRIGGER = 23
-	GPIO_ECHO    = 24
-	GPIO.setup(GPIO_TRIGGER,GPIO.OUT)  # Trigger
-	GPIO.setup(GPIO_ECHO,GPIO.IN)      # Echo
-	GPIO.output(GPIO_TRIGGER, False)
-	print("test2")
-	# Allow module to settle
-	time.sleep(0.5)
-
-	# Send 10us pulse to trigger
-	GPIO.output(GPIO_TRIGGER, True)
-	time.sleep(0.00001)
-	GPIO.output(GPIO_TRIGGER, False)
-	start = time.time()
-
-	sortir =0
-	distance = 300
-	while GPIO.input(GPIO_ECHO)==0:
-		start = time.time()
-		sortir+=1
-		if sortir > 5000 :
-			break
-
-	while GPIO.input(GPIO_ECHO)==1:
-		stop = time.time()
-
-
-	if sortir < 5000 :
-		# Calculate pulse length
-		elapsed = stop-start
-
-		# Distance pulse travelled in that time is time
-		# multiplied by the speed of sound (cm/s)
-		distance = elapsed * 34300
-
-		# That was the distance there and back so halve the value
-		distance = distance / 2
-
-	if distance < 65:
-		Stop()
-		time.sleep(2)
-		GPIO.output(15, True)
-		time.sleep(0.1)
-
-
-	else:
-		Stop()
-		GPIO.output(11, True)
-		GPIO.output(15, True)
 
 
