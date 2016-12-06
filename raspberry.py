@@ -21,7 +21,7 @@ def SendMail():
 	mailserver.ehlo()
 	mailserver.starttls()
 	mailserver.ehlo()
-	mailserver.login('info@georgesecurity.me', 'ge0rge5')
+	mailserver.login('info@georgesecurity.me', '')
 	mailserver.sendmail('info@georgesecurity.me', 'simon@ponchau.eu', msg.as_string())
 	mailserver.quit()
 
