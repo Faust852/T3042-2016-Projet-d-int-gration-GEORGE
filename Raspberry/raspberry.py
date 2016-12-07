@@ -215,18 +215,29 @@ class Alert(Thread):
 			GPIO.output(GPIO_TRIGGER, False)
 			start = time.time()
 
+			sortir =0
+			distance = 300 #distance de 300 cm par defaut : le robot peut avancer
+
 			while GPIO.input(GPIO_ECHO)==0:
 				start = time.time()
+				#si la variable sortir deviens plus grande que 5000, on considere que
+				#le signal est perdu et on sort de la boucle
+				sortir+=1
+				if sortir > 5000 :
+					break
 
 			while GPIO.input(GPIO_ECHO)==1:
 				stop = time.time()
 
-			# Calculer le temps du pulse
-			elapsed = stop-start
+			if sortir < 5000 :
+				# Calculer le temps du pulse
+				elapsed = stop-start
 
-			# calcul en fonction du temps et de la distance
-			distance = elapsed * 34300
-			distance = distance / 2
+				# calcul en fonction du temps et de la distance
+				distance = elapsed * 34300
+				distance = distance / 2
+
+
 		
 			#si les moteurs sont a l'arret
 			if data=='stop' or data=='':
