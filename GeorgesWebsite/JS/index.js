@@ -215,7 +215,7 @@ function newTab() {
     //Create the new tab
     var form = document.createElement("form");
     form.method = "GET";
-    form.action = "http://georgesecurity.me/chat.html";
+    form.action = "https://georgesecurity.me/chat.html";
     form.target = "_blank";
     document.body.appendChild(form);
     form.submit();
