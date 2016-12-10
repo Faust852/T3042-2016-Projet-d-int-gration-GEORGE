@@ -4,7 +4,7 @@ include 'tableau.php';
 //______________________________________________________ConnectBDD______________________________________________________
 // Connection to the database
 function ConnectBDD (){
-    $host = '';
+    $host = "";
     $dbname = '';
     $user = '';
     $pswd = '';
@@ -20,11 +20,11 @@ function ConnectBDD (){
 // Create a new user in database
 function newUser()
 {
-    $username = $_POST['username'];
-    $mdp = $_POST['signupPassword'];
-    $email = $_POST['email'];
-    $verifEmail = $_POST['verifEmail'];
-    $verifMdp = $_POST['verifMdp'];
+    $username = htmlspecialchars($_POST['username']);
+    $mdp = htmlspecialchars($_POST['signupPassword']);
+    $email = htmlspecialchars($_POST['email']);
+    $verifEmail = htmlspecialchars($_POST['verifEmail']);
+    $verifMdp = htmlspecialchars($_POST['verifMdp']);
 
     $sections = ConnectBDD()->prepare("select pseudo from USER");
     $sections->execute();
@@ -69,7 +69,7 @@ function newUser()
 //__________________________________________________gestion login_______________________________________________________
 // Allow users to connect
 function gestionLogin() {
-    $username = $_POST['username'];
+    $username = htmlspecialchars($_POST['username']);
 
     $sections = ConnectBDD()->prepare("select id, pseudo, email, mdp, status
                                  from USER where pseudo =:pseudo");
@@ -99,9 +99,9 @@ function gestionLogin() {
 //______________________________________________________Lier un robot et un user _________________________________________
 //Allow a user to link with his robot
 function linkRobot(){
-    $id = $_POST['robot_id'];
-    $mdp = md5($_POST['robot_password']);
-    $userCo = $_SESSION['user'];
+    $id = htmlspecialchars($_POST['robot_id']);
+    $mdp = htmlspecialchars(md5($_POST['robot_password']));
+    $userCo = htmlspecialchars($_SESSION['user']);
 
     $sections = ConnectBDD()->prepare("select mdp
                                  from ROBOT where id =:id");
@@ -133,7 +133,7 @@ function creeMenu ($tabMenu, $a) {
     $htmlMenu = '';
     $htmlMenu.='<ul class="w3-navbar w3-large w3-dark-grey w3-left-align">';
     //Menu icon
-    $htmlMenu.='<li class="w3-hide-medium w3-hide-large w3-dark-grey w3-opennav w3-right">
+    $htmlMenu.='<li class="accessFocus w3-hide-medium w3-hide-large w3-dark-grey w3-opennav w3-right">
     <div onclick="sideMenu();" class="nav-icon">
     <div></div>
     </div>
@@ -141,27 +141,29 @@ function creeMenu ($tabMenu, $a) {
 
     $nomMenu = array_keys($tabMenu);
     $i=0;
+    $j=0;
     foreach ($tabMenu as $value) {
         $titreOnglet = str_replace(' ', '', ucfirst($nomMenu[$i]));
         $content = ucfirst($nomMenu[$i]);
         if($value){
             if(is_array($value)){
                 //Creating the menu and submenu with the value in the array
-                $htmlMenu .= '<li style="width:'.$a.'%; text-align: center" class="w3-dropdown-hover w3-hide-small"><a href="#">'.$content.' <i class="fa fa-chevron-down" aria-hidden="true"></i></a><div style="width:'.$a.'%;" class="w3-dropdown-content w3-white w3-card-4">';
+                $htmlMenu .= '<li style="width:'.$a.'%; text-align: center" class="w3-dropdown-hover w3-hide-small"><a onfocus="showContent('.$j.')" class="accessFocus" href="#">'.$content.' <i class="fa fa-chevron-down" aria-hidden="true"></i></a><div style="width:'.$a.'%;" class="w3-dropdown-content w3-white w3-card-4">';
+                $j++;
                 foreach($value as $k=>$v){
-                    $htmlMenu .= '<a onclick="return menuClick(this)" href='.$v.'>'.$k.'</a>';
+                    $htmlMenu .= '<a class="accessFocus" onclick="return menuClick(this)" href='.$v.'>'.$k.'</a>';
                 }
                 $htmlMenu .= '</div></li>';
             }
             elseif($titreOnglet == 'Portal'){
                 //To stay displayed on the small menu
-                $htmlMenu.='<li style="width:'.$a.'%; text-align: center"><a onclick="return menuClick(this)" href='.$value.' id= o_'.$titreOnglet.'>'.$content.'</a></li>';
+                $htmlMenu.='<li style="width:'.$a.'%; text-align: center"><a class="accessFocus" onclick="return menuClick(this)" href='.$value.' id= o_'.$titreOnglet.'>'.$content.'</a></li>';
             }elseif($titreOnglet == "Homepage") {
                 //To go back on presentation website
-                $htmlMenu.='<li style="width:'.$a.'%;text-align: center" class="w3-hide-small"><a href="javascript:void(startPageViewed());" id= o_'.$titreOnglet.'>'.$content.'</a></li>';
+                $htmlMenu.='<li style="width:'.$a.'%;text-align: center" class="w3-hide-small"><a class="accessFocus" href="javascript:void(startPageViewed());" id= o_'.$titreOnglet.'>'.$content.'</a></li>';
             }
             else{
-                $htmlMenu.='<li style="width:'.$a.'%; text-align: center" class="w3-hide-small"><a onclick="return menuClick(this)" href='.$value.' id= o_'.$titreOnglet.'>'.$content.'</a></li>';
+                $htmlMenu.='<li style="width:'.$a.'%; text-align: center" class="w3-hide-small"><a onfocus="showContent(2)" class="accessFocus" onclick="return menuClick(this)" href='.$value.' id= o_'.$titreOnglet.'>'.$content.'</a></li>';
             }
         }else{
             $htmlMenu.='<li><h1>'.$nomMenu[$i].'</a></li>';
@@ -325,9 +327,9 @@ function newRobot(){
     $counter = $_GET['counter'];
     if($_SESSION["status"] == "admin"){
         for($i=0;$i<=$counter; $i++){
-            $id = $_POST["robotID".$i];
-            $mdp = $_POST["robotPsw".$i];
-            $ip = $_POST["robotIP".$i];
+            $id = htmlspecialchars($_POST["robotID".$i]);
+            $mdp = htmlspecialchars($_POST["robotPsw".$i]);
+            $ip = htmlspecialchars($_POST["robotIP".$i]);
             $sections = ConnectBDD()->prepare("INSERT INTO ROBOT (id, mdp, ip)
                                        VALUES (:id, :mdp, :ip)");
             $sections->execute(array(':id' => $id, ':mdp' => md5($mdp), ':ip' => $ip));

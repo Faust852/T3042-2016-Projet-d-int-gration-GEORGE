@@ -16,6 +16,33 @@ if (!isset ($_SESSION['start'])) {
 
 $titrePage  = 'Georgesecurity - Home';
 
+$cookie_name = "vspdh";
+// Random
+$ticket = session_id().microtime().rand(0,9999999999);
+// Hash
+$ticket = hash('sha512', $ticket);
+
+// record
+setcookie($cookie_name, $ticket, time() + (60 * 20)); // Expire after 20min
+$_SESSION['vspdh'] = $ticket;
+
+if (isset($_COOKIE['ticket']) == isset($_SESSION['ticket']))
+{
+    //New ones, maximum security
+    $ticket = session_id().microtime().rand(0,9999999999);
+    $ticket = hash('sha512', $ticket);
+    $_COOKIE['vspdh'] = $ticket;
+    $_SESSION['vspdh'] = $ticket;
+}
+else
+{
+    // On détruit la session
+    $_SESSION = array();
+    session_destroy();
+    header('location:index.php');
+}
+
+
 if (isset ($_GET['rq'])) {
     $_SESSION['rqLog'][time()]=$_GET['rq'];
     $envoi=[];

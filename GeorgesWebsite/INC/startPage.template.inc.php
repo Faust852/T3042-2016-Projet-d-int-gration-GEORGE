@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <title>Georgesecurity - Home page</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../IMG/logo.png">
 <link rel="stylesheet" href="./CSS/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 <script
-    src="http://code.jquery.com/jquery-1.10.2.min.js"
+    src="https://code.jquery.com/jquery-1.10.2.min.js"
     integrity="sha256-C6CB9UYIS9UJeqinPHWTHVqh/E1uhG5Twh+Y5qFQmYg="
     crossorigin="anonymous"></script>
 <script
-    src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+    src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
     integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
     crossorigin="anonymous"></script>
 <script src='./JS/index.js'></script>
@@ -29,7 +30,7 @@
     body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif;}
     body, html {
         height: 100%;
-        color: #777;
+        color: #4f4f4f;
         line-height: 1.8;
     }
 
@@ -77,21 +78,25 @@
             background-attachment: scroll;
         }
     }
+
+    a.accessFocus:focus{
+        background-color: #616161;
+    }
 </style>
 <body>
 
 <!-- Navbar (sit on top) -->
 <div class="w3-top">
     <ul class="w3-navbar" id="myNavbar">
-        <li style="color: black;background-color: rgba(255, 255, 255, 0.56)"><a href="#">Home page</a></li>
-        <li style="float: right;;background-color:rgba(255, 255, 255, 0.56); color: black;"><a href="javascript:void(startPageViewed());">Go to portal</a></li>
+        <li style="color: black;background-color: rgba(255, 255, 255, 0.56)"><a class="accessFocus" href="#">Back to the top</a></li>
+        <li style="float: right;;background-color:rgba(255, 255, 255, 0.56); color: black;"><a class="accessFocus" href="javascript:void(startPageViewed());">Go to portal</a></li>
     </ul>
 </div>
 
 <!-- First Parallax Image with Logo Text -->
 <div class="bgimg-1 w3-display-container">
     <div class="w3-display-middle" style="white-space:nowrap;">
-        <span style="color: black;background-color: rgba(255, 255, 255, 0.56)" class="w3-center w3-padding-xlarge w3-xlarge w3-wide w3-animate-opacity"><span>Georges</span></span>
+        <span style="color: black;background-color: rgba(255, 255, 255, 0.56)" class="logoSize w3-center w3-padding-xlarge w3-wide w3-animate-opacity"><span><img src="../IMG/logo.png" alt="Logo" class="homeLogo">eorges</span></span>
     </div>
 </div>
 

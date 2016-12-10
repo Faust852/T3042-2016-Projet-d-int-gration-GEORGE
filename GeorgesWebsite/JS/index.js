@@ -262,3 +262,20 @@ function duplicateFields(){
     )
     counter++;
 }
+
+function showContent(a){
+    if(a == 0){
+        document.getElementsByClassName("w3-dropdown-content")[a].style.display = 'block';
+        document.getElementsByClassName("w3-dropdown-content")[1].style.display = 'none';
+    }else if(a == 1){
+        document.getElementsByClassName("w3-dropdown-content")[a].style.display = 'block';
+        document.getElementsByClassName("w3-dropdown-content")[0].style.display = 'none';
+    }else{
+        try{
+            document.getElementsByClassName("w3-dropdown-content")[1].style.display = 'none';
+            document.getElementsByClassName("w3-dropdown-content")[0].style.display = 'none';
+        }catch(e){
+
+        }
+    }
+}

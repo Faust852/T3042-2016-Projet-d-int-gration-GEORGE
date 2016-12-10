@@ -117,17 +117,18 @@ input[type=submit] {
     background-color: lightblue;
 }
 
-.submitButton{
-    padding:5px 15px;
-    background:#ccc;
-    border:0 none;
-    cursor:pointer;
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
+input[type=submit].submitButton:focus,input[type=submit].submitButton:hover{
+    background-color: white!important;
+    color: black!important;
 }
 
-.submitButton:hover{
-    background: #8b8b8b;
+button.submitButton:focus,button.submitButton:hover{
+    background-color: white!important;
+    color: black!important;
+}
+
+button.submitButton:focus .spanArrow, button.submitButton:hover .spanArrow{
+    color:black;
 }
 
 .contactP{
@@ -157,8 +158,14 @@ fieldset {
 }
 
 .crossButtons{
-    height: 50px;
-    width: 50px;
+    height: 80px;
+    width: 80px;
+    background-color:#616161;
+}
+
+.spanArrow{
+    font-size: 35px;
+    color: white;
 }
 
 .centerControlsDivs{
@@ -168,10 +175,6 @@ fieldset {
 
 .middleControls{
     margin: 10px;
-}
-
-.spanArrow{
-    font-size: 35px;
 }
 
 #videoDiv{
@@ -302,4 +305,21 @@ fieldset {
     .desktopControls{
         display: block;
     }
+}
+
+a.accessFocus:focus{
+    background-color: lightgray!important;
+    color: black;
+}
+
+.w3-input:focus{
+    border-color: red;
+}
+
+.w3-dropdown-click:focus{
+    position: static;
+}
+
+.w3-btn:focus{
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
 }
