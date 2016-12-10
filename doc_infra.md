@@ -68,7 +68,6 @@ Toutes les informations (tables et relations) ne sont pas sauvegarder dans le co
     MYSQL_ROOT_PASSWORD='%MYPASSWORD%’\
     -v /storage/mysql/mysql-datadir:/var/lib/mysql mysql
 
-
 # Configuration du DNS
 Le container DNS consiste simplement en un serveur Bind9 qui permet d'accéder au site via une URL plutôt qu'une adresse IP.
 
@@ -83,6 +82,7 @@ Le container DNS consiste simplement en un serveur Bind9 qui permet d'accéder a
     };
     
     nano /etc/bind/zones/db.georgesecurity.me
+    
     
     ;
 	; BIND data file for georgesecurity.me
@@ -108,3 +108,37 @@ Souscrire un nom de domaine, par exemple chez namecheap, et leur fournir l'adres
 
 
 # Configuration du VPN
+Le container VPN est construit via les images Docker de M. Kyle Manna, kylemanna/docker-openvpn. Il suffit d'appliquer les directives indiquées sur la documentation fournie
+
+### Countruire l'image et lancer le container :
+    OVPN_DATA="ovpn-data"
+    
+    docker volume create --name $OVPN_DATA
+    docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://georgesecurity.me
+    docker run -v $OVPN_DATA:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki
+    
+    docker run -v $OVPN_DATA:/etc/openvpn -d -p 1194:1194/udp --cap-add=NET_ADMIN kylemanna/openvpn
+    
+### Generer les certificats de chaque robot (et administrateur) :
+    docker run -v $OVPN_DATA:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full CLIENTNAME nopass
+    docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient CLIENTNAME > CLIENTNAME.ovpn
+
+# Configuration du routage entre le container VPN et le container de la stack Web :
+Il faut configurer le routage entre les deux containers de façon à ce que le serveur Apache puisse accèder au flux video, et que le robot puisse recevoir les informations en provenance du site web.
+
+### Sur l'OS parent :
+Il faut d'abord ajouter une route du subnet VPN (192.168.255.0/24) passant par l'interface du container openVPN
+
+    route add 192.168.255.0/24 via 172.17.0.X (X = l'ip du container vpn)
+  
+### Sur le container VPN :
+Ensuite, il faut configurer les iptables dans le serveur VPN pour permettrre la liaison entre les deux subnets (celui du vpn, et celui de l'interface docker du même container. Nous utilisons le port 8082 pour le flux video.
+192.168.255.X 	= l'ip du client
+172.17.0.X 	= l'ip de l'interface Docker du container VPN
+
+    iptables -t nat -A PREROUTING -j DNAT -d 172.17.0.X -p udp --dport 8082 --to 192.168.255.X:8082
+    iptables -t nat -A PREROUTING -j DNAT -d 172.17.0.X -p tcp --dport 8082 --to 192.168.255.X:8082
+    
+    iptables -t nat -A POSTROUTING -j MASQUERADE
+    
+    sysctl net.ipv4.ip_forward=1
