@@ -17,7 +17,7 @@
         </div>
 
         <p class="w3-center">
-            <input type="submit" name="sendRobot" id="sendRobot" value="Send" class="w3-center w3-btn w3-dark-grey w3-border w3-round-large">
+            <input type="submit" name="sendRobot" id="sendRobot" value="Send" class="submitButton w3-center w3-btn w3-dark-grey w3-border w3-round-large">
         </p>
     </form>
 </div>
