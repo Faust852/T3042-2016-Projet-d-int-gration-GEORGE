@@ -17,7 +17,7 @@ def SendMail():
 	msg['From'] = 'info@georgesecurity.me'
 	msg['To'] = 'simon@ponchau.eu'
 	msg['Subject'] = 'Alerte' 
-	message = 'Votre robot a detecter une alerte!!'
+	message = 'Votre robot a detect\xe9 une alerte!!'
 	msg.attach(MIMEText(message))
 	mailserver = smtplib.SMTP('mail.privateemail.com', 587)
 	mailserver.ehlo()
