@@ -84,7 +84,7 @@ Le container DNS consiste simplement en un serveur Bind9 qui permet d'accéder a
     
     nano /etc/bind/zones/db.georgesecurity.me
     
-    	;
+    ;
 	; BIND data file for georgesecurity.me
 	;
 	$TTL    3h
@@ -104,7 +104,7 @@ Le container DNS consiste simplement en un serveur Bind9 qui permet d'accéder a
 	www     IN      A       185.14.186.97
 	mail    IN      A       185.14.186.97
 
-
+Souscrire un nom de domaine, par exemple chez namecheap, et leur fournir l'adresse IP externe du serveur sur lequel se trouve le DNS, ainsi que ns1.georgesecurity.me. comme resolveur.
 
 
 # Configuration du VPN
