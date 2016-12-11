@@ -14,18 +14,18 @@
 
 * Introduisez l'identifiant et le mot de passe (fournis avec le robot)
 
-### tapez les instructions suivantes (appuyez sur enter entre chaque ligne):
+### Tapez les instructions suivantes (appuyez sur enter entre chaque ligne):
     cd /etc/wpa_supplicant
     sudo nano wpa_supplicant.conf
     (si un mot de passe vous est demandé, introduisez celui que vous avez introduit plus haut)
 
-### ajoutez a la fin du fichier qui s'ouvre les lignes suivantes en remplacer par les bonnes valeurs :
+### Ajoutez a la fin du fichier qui s'ouvre les lignes suivantes en remplacer par les bonnes valeurs :
 
-  network={
-	   ssid="nomDeVotreWifi"
-	   psk="motDePasseDeVotreWifi"
-	   key_mgmt=WPA-PSK
-  }
+    network={
+	ssid="nomDeVotreWifi"
+	psk="motDePasseDeVotreWifi"
+	key_mgmt=WPA-PSK
+    }
 
 * Tapez ctrl-x puis y pour sauver
 
@@ -39,7 +39,7 @@ __________________________________
 
 * Rendez-vous sur le site www.georgesecurity.me
 
-* Cliquez sur "Go to portal" puis sur "sign up" pour vous inscrire
+* Cliquez sur "Go to portal" puis sur "Sign up" pour vous inscrire
 
 * Une fois inscrit vous pouvez vous connecter en cliquant sur "Sign in"
 
