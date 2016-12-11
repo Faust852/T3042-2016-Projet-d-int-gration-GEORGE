@@ -46,6 +46,7 @@ body {
 
 #contenu p, #contenu li {
     line-height: 1.5;
+    font-weight: 600;
 }
 
 input[type=submit] {

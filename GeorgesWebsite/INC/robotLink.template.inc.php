@@ -4,7 +4,7 @@
 
         <div id="connectionFailed" class="w3-center">
         </div>
-
+        
         <div class="w3-row w3-section">
             <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-user"></i></div>
             <div class="w3-rest">

@@ -4,7 +4,7 @@ include 'tableau.php';
 //______________________________________________________ConnectBDD______________________________________________________
 // Connection to the database
 function ConnectBDD (){
-    $host = "";
+    $host = '';
     $dbname = '';
     $user = '';
     $pswd = '';
