@@ -30,7 +30,7 @@
 * Tapez ctrl-x puis y pour sauver
 
 ### Tapez :
-  sudo halt
+    sudo halt
 
 * Vous pouvez maintenant débrancher la souris, le clavier et l'écran, lorsque vous rebrancherez le Raspberry sur la batterie, il se connectera seul à votre wifi.
 
