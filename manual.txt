@@ -8,7 +8,7 @@ ____________________________
 
 - Branchez un écran, un clavier et une souris au Raspberry (le petit ordinateur qui se trouve sur votre robot)
 
-- Mettez le Raspberry sur courant
+- Mettez le Raspberry sur le courant
 
 - Attendez une ou deux minutes le temps que le Raspberry initialise tout
 
@@ -50,5 +50,5 @@ __________________________________
 
 - Introduisez les identifiants du robot que vous avez reçu (ils vous sont fournis)
 
-- Déconnectez-vous, puis reconnectez-vous, et vous pouvez contrôler Georges dans "Georges/Controls"
+- Vous pouvez désormais contrôler Georges dans "Georges/Controls"
 
