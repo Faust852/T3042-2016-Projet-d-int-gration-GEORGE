@@ -3,7 +3,7 @@ Etapes à suivre pour faire fonctionner votre Georges
 -----------------------------------------------------------------------------
 
 
-1) Le connecter au wifi
+#Le connecter au Wi-Fi
 ____________________________
 
 - Branchez un écran, un clavier et une souris au Raspberry (le petit ordinateur qui se trouve sur votre robot)
