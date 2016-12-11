@@ -13,6 +13,6 @@ Ceci est le repository du projet d'intégration de 3TI 2016-2017
 
 <a href="https://trello.com/b/A33x4oGl/georges-le-petit-robot">Trello</a>
 
-<a href="https://github.com/Faust852/T3042-2016-Projet-d-integration-GEORGES/blob/master/manual.txt">Manuel d'installation</a>
+<a href="https://github.com/Faust852/T3042-2016-Projet-d-integration-GEORGES/blob/master/manual.md">Manuel d'installation</a>
 
 <a href="https://github.com/Faust852/T3042-2016-Projet-d-integration-GEORGES/blob/master/doc_infra.md">Documentation Infrastructure</a>
