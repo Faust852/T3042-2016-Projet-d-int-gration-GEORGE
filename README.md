@@ -10,6 +10,7 @@ Ceci est le repository du projet d'intégration de 3TI 2016-2017
     
   Le principal but de Georges est donc de supplémenter les systèmes de sécurité actuel qui pose trop de contraintes au niveau technique et financier.
 
+  Le site web de Georges est www.georgesecurity.me.
 
 <a href="https://trello.com/b/A33x4oGl/georges-le-petit-robot">Trello</a>
 
