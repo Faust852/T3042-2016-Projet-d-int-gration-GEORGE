@@ -4,14 +4,14 @@ include 'tableau.php';
 //______________________________________________________ConnectBDD______________________________________________________
 // Connection to the database
 function ConnectBDD (){
-    $host = '';
+    $host = "";
     $dbname = '';
     $user = '';
     $pswd = '';
     try {
         $bdd = new PDO('mysql:host=' . $host . ';dbname=' . $dbname . ';charset=utf8', $user, $pswd);
     } catch (PDOException $e) {
-        send('connectionFailed', 'ERREURPDO dans '.$e);
+        send('connectionFailed', 'ERREURPDO in '.$e);
     };
 
     return $bdd;
@@ -20,11 +20,11 @@ function ConnectBDD (){
 // Create a new user in database
 function newUser()
 {
-    $username = htmlspecialchars($_POST['username']);
-    $mdp = htmlspecialchars($_POST['signupPassword']);
-    $email = htmlspecialchars($_POST['email']);
-    $verifEmail = htmlspecialchars($_POST['verifEmail']);
-    $verifMdp = htmlspecialchars($_POST['verifMdp']);
+    $username = htmlentities($_POST['username']);
+    $mdp = htmlentities($_POST['signupPassword']);
+    $email = htmlentities($_POST['email']);
+    $verifEmail = htmlentities($_POST['verifEmail']);
+    $verifMdp = htmlentities($_POST['verifMdp']);
 
     $sections = ConnectBDD()->prepare("select pseudo from USER");
     $sections->execute();
@@ -34,22 +34,22 @@ function newUser()
     //Check conditions
     // Username already in database?
     if (in_array($username, $sectionTab)) {
-        $b .= 'Ce pseudo est déjà utilisé';
+        $b .= 'Username already used';
         $i = 1;
     }
     // Same passwords?
     if ($mdp !== $verifMdp) {
-        $b .= '<br>Les mots de passe sont différents';
+        $b .= '<br>Passwords are not the same';
         $i = 1;
     }
     // All fields completed?
     if (!($username && $email && $mdp && $verifMdp && $verifEmail)){
-        $b .= '<br>Tous les champs ne sont pas completés';
+        $b .= '<br>All fields are not completed';
         $i = 1;
     }
     //Right email type?
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $b.= '<br>Email non valide';
+        $b.= '<br>Email not valid';
         $i = 1;
     }
     //Create user if there is no error
@@ -57,19 +57,19 @@ function newUser()
         $sections = ConnectBDD()->prepare("INSERT INTO USER (pseudo, mdp, email)
                                        VALUES (:pseudo, :mdp, :email)");
         $sections->execute(array(':pseudo' => $username, ':mdp' => md5($mdp), ':email' => $email));
-        $b .= "<h1 class='signLogP'>Votre compte a bien été enregistré</h1>";
+        $b .= "<h1 class='signLogP'>You are now registered!</h1>";
         return $b;
     }
     //If not, send message error
     if($i == '1'){
         send('connectionFailed',$b);
-        return chargeTemplate('signup');
+        return loadTemplate('signup');
     }
 }
-//__________________________________________________gestion login_______________________________________________________
+//__________________________________________________Manage login_______________________________________________________
 // Allow users to connect
 function gestionLogin() {
-    $username = htmlspecialchars($_POST['username']);
+    $username = htmlentities($_POST['username']);
 
     $sections = ConnectBDD()->prepare("select id, pseudo, email, mdp, status
                                  from USER where pseudo =:pseudo");
@@ -90,18 +90,18 @@ function gestionLogin() {
         creeConnectedMenu();
     } else {
         //if not, send error
-        send('connectionFailed', 'Mot de passe ou utilisateur incorrect');
-        return chargeTemplate('login');
+        send('connectionFailed', 'Wrong password or username');
+        return loadTemplate('login');
     }
     //}
 }
 
-//______________________________________________________Lier un robot et un user _________________________________________
+//______________________________________________________Link un robot et un user _________________________________________
 //Allow a user to link with his robot
 function linkRobot(){
-    $id = htmlspecialchars($_POST['robot_id']);
-    $mdp = htmlspecialchars(md5($_POST['robot_password']));
-    $userCo = htmlspecialchars($_SESSION['user']);
+    $id = htmlentities($_POST['robot_id']);
+    $mdp = htmlentities(md5($_POST['robot_password']));
+    $userCo = htmlentities($_SESSION['user']);
 
     $sections = ConnectBDD()->prepare("select mdp
                                  from ROBOT where id =:id");
@@ -113,20 +113,20 @@ function linkRobot(){
     if($mdp == $sectionTab[0]['mdp']){
         $results = ConnectBDD()->prepare("INSERT INTO USER_ROBOT(id_user, id_robot) VALUES (:id_user, :id_robot)");
         $results->execute(array(':id_user' => $userCo, ':id_robot' => $id));
-        return "<h1 class='signLogP'>Votre robot vous est désormais lié!</h1>";
+        return "<h1 class='signLogP'>Your robot is now linked to you!</h1>";
         try{
             checkLinkedRobots();
         }catch(Exception $e){
         }
     }else{
         //if not send error
-        send('connectionFailed', "Le mot de passe ou l'id est incorrect");
-        return chargeTemplate('robotLink');
+        send('connectionFailed', "Wrong password or ID");
+        return loadTemplate('robotLink');
     }
 }
 
 
-//______________________________________________________creer menu________________________________________________________
+//______________________________________________________Create menu________________________________________________________
 //☰
 //Create all the menus (Small format, and desktop format)
 function creeMenu ($tabMenu, $a) {
@@ -151,7 +151,7 @@ function creeMenu ($tabMenu, $a) {
                 $htmlMenu .= '<li style="width:'.$a.'%; text-align: center" class="w3-dropdown-hover w3-hide-small"><a onfocus="showContent('.$j.')" class="accessFocus" href="#">'.$content.' <i class="fa fa-chevron-down" aria-hidden="true"></i></a><div style="width:'.$a.'%;" class="w3-dropdown-content w3-white w3-card-4">';
                 $j++;
                 foreach($value as $k=>$v){
-                    $htmlMenu .= '<a class="accessFocus" onclick="return menuClick(this)" href='.$v.'>'.$k.'</a>';
+                    $htmlMenu .= '<a class="accessFocus" onclick="return menuClick(this); showContent(2)" href='.$v.'>'.$k.'</a>';
                 }
                 $htmlMenu .= '</div></li>';
             }
@@ -215,21 +215,21 @@ function monPrint_r ($tab){
 }
 
 
-//______________________________________________________charger Accueil________________________________________________
+//______________________________________________________load home________________________________________________
 //Load adapted message on the portal (If you are connected or not)
-function chargeAccueil (){
+function loadHome (){
     if($_SESSION['is']['connected'] == 1){
-        $temp  = chargeTemplate('accueilConnected');
+        $temp  = loadTemplate('homeConnected');
         send('user', ' ' . ucfirst($_SESSION['username']));
     }else{
-        $temp  = chargeTemplate('accueil');
+        $temp  = loadTemplate('home');
     }
     return $temp;
 }
 
-//______________________________________________________charger template________________________________________________
+//______________________________________________________load template________________________________________________
 // Load .template.inc.php files
-function chargeTemplate ($t){
+function loadTemplate ($t){
     $file = file('INC/'.$t.'.template.inc.php');
 
     global $envoi;
@@ -327,15 +327,15 @@ function newRobot(){
     $counter = $_GET['counter'];
     if($_SESSION["status"] == "admin"){
         for($i=0;$i<=$counter; $i++){
-            $id = htmlspecialchars($_POST["robotID".$i]);
-            $mdp = htmlspecialchars($_POST["robotPsw".$i]);
-            $ip = htmlspecialchars($_POST["robotIP".$i]);
+            $id = htmlentities($_POST["robotID".$i]);
+            $mdp = htmlentities($_POST["robotPsw".$i]);
+            $ip = htmlentities($_POST["robotIP".$i]);
             $sections = ConnectBDD()->prepare("INSERT INTO ROBOT (id, mdp, ip)
                                        VALUES (:id, :mdp, :ip)");
             $sections->execute(array(':id' => $id, ':mdp' => md5($mdp), ':ip' => $ip));
         }
     }
-    return '<h2 class="w3-center">Robots ajouté</h2>';
+    return '<h2 class="w3-center">Robots added</h2>';
 }
 //________________________________________________ If robot is linked___________________________________________________
 //Just to check if you are linked with a robot
@@ -479,8 +479,6 @@ function creerVideos () {
 	foreach($files as $image)
 		{
 			$retour.='<a href='.$image.'>'.$image.'</a><br>';
-
-		  // $retour.='<img src='.$image.'></img>';
 		}
 
 
@@ -504,32 +502,32 @@ function traiteRequest($rq) {
     switch ($rq){
         case 'home' :
             //Back to the portal's home
-            send('contenu', chargeAccueil());
+            send('contenu', loadHome());
             if($_SESSION['is']['connected'] == 1){
                 send('user', ' ' . ucfirst($_SESSION['username']));
             }
             break;
         case 'contact' :
             //Contact page
-            send('contenu', chargeTemplate($rq));
+            send('contenu', loadTemplate($rq));
             break;
         case 'controls' :
             //Controls page
             if(checkLinkedRobots()){
-                $templateControl = chargeTemplate($rq);
+                $templateControl = loadTemplate($rq);
                 $control = str_replace('#motionURL' , $_SESSION['robotId']."/".$_SESSION['robotPasswd']."/", $templateControl );
                 send('contenu', $control);
             }else{
-                send('contenu', chargeTemplate('noLinkedRobot'));
+                send('contenu', loadTemplate('noLinkedRobot'));
             }
             break;
         case 'robotLink' :
-            //Controls page
-            send('contenu', chargeTemplate($rq));
+            //Link page
+            send('contenu', loadTemplate($rq));
             break;
         case 'forum':
             //Opens forum
-            send('contenu', chargeTemplate($rq));
+            send('contenu', loadTemplate($rq));
             break;
         case 'testForm' :
             //Manage forms
@@ -537,7 +535,7 @@ function traiteRequest($rq) {
             break;
         case 'login' :
             //Sign in page
-            send('contenu', chargeTemplate($rq));
+            send('contenu', loadTemplate($rq));
             break;
         case 'logout' :
             //Disconection
@@ -549,7 +547,7 @@ function traiteRequest($rq) {
             break;
         case 'signup' :
             //Sign up page
-            send('contenu', chargeTemplate($rq));
+            send('contenu', loadTemplate($rq));
             break;
         case 'users':
             //Admin use users list
@@ -589,7 +587,7 @@ function traiteRequest($rq) {
             if(checkLinkedRobots()){
                 send('contenu', creerVideos());
             }else{
-                send('contenu', chargeTemplate('noLinkedRobot'));
+                send('contenu', loadTemplate('noLinkedRobot'));
             }
             $titrePage = 'Georgesecurity - Videos';
 			break;
@@ -601,7 +599,7 @@ function traiteRequest($rq) {
             $actualId = getActualId();
             send("actualId", $actualId);
             send('variable', $actualId);
-            send('contenu', chargeTemplate($rq));
+            send('contenu', loadTemplate($rq));
             break;
         default : send('contenu', 'Requête inconnue : '.$_GET['rq']);
     }

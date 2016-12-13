@@ -1,10 +1,10 @@
 	<div id="videoDiv">
-		<img src="https://georgesecurity.me/#motionURL" alt="Le raspberry est éteint. ">
+		<img src="https://georgesecurity.me/#motionURL" alt="Georges is off. ">
 	</div>
 
 	<div class="desktopControls">
-		<p class='signLogP'>Cliquez au centre pour annuler le déplacement</p>
-		<p class='signLogP'>Restez appuyé sur le bouton pour aller dans cette direction</p>
+		<p class='signLogP'>Click at the center to stop Georges</p>
+		<p class='signLogP'>Stay pressed to move in that direction then release to stop</p>
 		<div id="divUpArrow"><button class="w3-btn submitButton crossButtons" onmousedown="sendKey('up');" onmouseup="sendStop();"><span class="spanArrow">&#8593;</span></button></div>
 		<div style="width: 100%; text-align: center;">
 			<button class="w3-btn submitButton crossButtons middleControls"	onmousedown="sendKey('left');" onmouseup="sendStop();""><span class="spanArrow">&#8592;</span></button>
@@ -20,7 +20,7 @@
 		-->
 	</div>
 	<div class="mobileControls">
-		<p class='signLogP'>Cliquez sur la direction et puis au centre pour stopper le déplacement</p>
+		<p class='signLogP'>Click on the direction, then on the middle to stop Georges</p>
 		<div id="divUpArrow"><button class="submitButton crossButtons" onclick="sendKey('up');"><span class="spanArrow">&#8593;</span></button></div>
 		<div style="width: 100%; text-align: center;">
 			<button class="submitButton crossButtons middleControls" onclick="sendKey('left');"><span class="spanArrow">&#8592;</span></button>
@@ -31,6 +31,6 @@
 	</div>
 
 	<p class="soumission">
-		<button id="autoButton" class="submitButton w3-center w3-btn w3-dark-grey w3-border w3-round-large" onclick="sendAuto();"><span>Mode automatique</span></button>
+		<button id="autoButton" class="submitButton w3-center w3-btn w3-dark-grey w3-border w3-round-large" onclick="sendAuto();"><span>Auto mode</span></button>
 	</p>
 

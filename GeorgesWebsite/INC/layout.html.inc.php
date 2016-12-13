@@ -65,7 +65,7 @@
     <section id="contenu" onclick="showContent(2)">
         <div id="contenuTitre"><?php echo $textLogo?></div>
         <div id="errorMessage" name="errorMessage"></div>
-        <?php echo chargeAccueil();?>
+        <?php echo loadHome();?>
     </section><!-- #contenu -->
 
     <div id="popUpDialog" class="deletingDialog" title="Delete?" style="display: none;">

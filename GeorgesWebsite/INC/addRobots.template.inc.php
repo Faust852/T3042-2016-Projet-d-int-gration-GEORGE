@@ -27,7 +27,7 @@
 
         <p class="w3-center">
             <input type="button" onClick="duplicateFields()" value="One more?" class="w3-margin-bottom w3-center w3-btn w3-white w3-border w3-round-large w3-light-grey"><br>
-            <input type="submit" name="submitAddRobots" id="submitAddRobots" value="Send" class="w3-center w3-btn w3-white w3-border w3-round-large w3-light-grey">
+            <input type="submit" name="submitAddRobots" id="submitAddRobots" value="Send" class="submitButton w3-center w3-btn w3-dark-grey w3-border w3-round-large">
         </p>
     </form>
 </div>

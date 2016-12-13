@@ -1,5 +1,5 @@
 //
-function traiteRetour(objetJS) {
+function processReturn(objetJS) {
     //What is returned from the php
     $.map(objetJS, function (val, i) {
         switch (i) {
@@ -78,7 +78,7 @@ function sendId(id, type){
                 text: 'Yes, proceed!',
                 open: function() { $(this).addClass('yescls') },
                 click: function() {$.get('index.php', 'rq=deleteFromDb&idDelete=' + id + '&type=' + type, function (result) {
-                    traiteRetour(JSON.parse(result));
+                    processReturn(JSON.parse(result));
                 });
                     $(this).dialog("close");}
             },
@@ -144,7 +144,7 @@ function menuClick(a){
         newTab();
     }else{
         $.get('index.php', 'rq=' + rq, function (result) {
-            traiteRetour(JSON.parse(result));
+            processReturn(JSON.parse(result));
         })
     }
     return false;
@@ -154,17 +154,17 @@ function sendForm(a){
     //Send forms to php
     var rq = $(a).attr('action').split('.')[0];
     var formType = $(a).attr('id');
-    var monFormData = new FormData($('form')[0]);
+    var myFormData = new FormData($('form')[0]);
     if(formType == "sendNewAccount"){
         var x = 0;
         var y = '';
         if($("#signupPassword").val() !== $("#verifMdp").val()){
             x++;
-            y += 'Les mots de passes sont différents';
+            y += 'Passwords are not the same';
         }
         if($("#email").val() !== $("#verifEmail").val()){
             x++;
-            y += '<br>Les emails sont différentes';
+            y += '<br>Emails are not the same';
         }
         if(x > 0){
             $('#connectionFailed').css("display", "block");
@@ -173,12 +173,12 @@ function sendForm(a){
             $.ajax({
                 url: 'index.php?' + 'rq=' + rq + '&submit=' + formType,
                 type: 'POST',
-                data: monFormData,
+                data: myFormData,
                 contentType: false,
                 processData: false,
                 dataType: 'html',
                 success: function (data) {
-                    traiteRetour(JSON.parse(data));
+                    processReturn(JSON.parse(data));
                 }
             });
         }
@@ -187,24 +187,24 @@ function sendForm(a){
         $.ajax({
             url: 'index.php?' + 'rq=' + rq + '&submit=' + formType + '&counter=' + counter,
             type: 'POST',
-            data: monFormData,
+            data: myFormData,
             contentType: false,
             processData: false,
             dataType: 'html',
             success: function (data) {
-                traiteRetour(JSON.parse(data));
+                processReturn(JSON.parse(data));
             }
         });
     }else{
         $.ajax({
             url: 'index.php?' + 'rq=' + rq + '&submit=' + formType,
             type: 'POST',
-            data: monFormData,
+            data: myFormData,
             contentType: false,
             processData: false,
             dataType: 'html',
             success: function (data) {
-                traiteRetour(JSON.parse(data));
+                processReturn(JSON.parse(data));
             }
         });
     }

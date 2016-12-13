@@ -1,5 +1,5 @@
 <?php
-include_once 'INC/mesFonctions.inc.php';
+include_once 'INC/main.inc.php';
 
 session_start();
 
