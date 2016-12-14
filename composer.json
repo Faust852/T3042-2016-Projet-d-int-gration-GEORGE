@@ -1,1 +1,2 @@
+{"name":"travisci\/example","type":"typo3-flow-package","description":"","require":{"typo3\/flow":"*"},"autoload":{"psr-0":{"TravisCi\\Example":"Classes"}}}
 
