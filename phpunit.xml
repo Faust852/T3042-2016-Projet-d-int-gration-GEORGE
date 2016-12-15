@@ -2,8 +2,7 @@
 <phpunit colors="true" bootstrap="vendor/autoload.php">
     <testsuites>
         <testsuite name="PHP cURL Test Suite">
-            <directory>./GeorgesWebsite/INC</directory>
-            <file>./GeorgesWebsite/INC/test.php</file>
+            <directory suffix=".php">./GeorgesWebsite/INC</directory>
         </testsuite>
     </testsuites>
 </phpunit>
