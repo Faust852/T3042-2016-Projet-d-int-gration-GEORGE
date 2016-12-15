@@ -1,11 +1,11 @@
 <?php
 //use PHPUnit\Framework\TestCase;
-use GeorgesWebsite\INC;
+use GeorgesWebsite\INC as web;
 class test extends \PHPUnit_Framework_TestCase
 {
  	function testRemplissageSession()
 		{
-		    fillSession();
+		    web\fillSession();
 		   	$this->assertEquals($_SESSION['DB']['host'], "185.14.186.97");
 			$this->assertEquals($_SESSION['DB']['dbname'], 'georges');
 			$this->assertEquals($_SESSION['DB']['user'], 'root');
@@ -13,7 +13,7 @@ class test extends \PHPUnit_Framework_TestCase
 
 	function testConnectionBDD ()
 		{
-			fillSession();
+			web\fillSession();
 			//ConnectBDD ();
 		}
 
