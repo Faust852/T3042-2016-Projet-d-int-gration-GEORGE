@@ -1,6 +1,6 @@
 <?php
-use PHPUnit\Framework\TestCase;
-class test extends TestCase
+//use PHPUnit\Framework\TestCase;
+class test extends \PHPUnit_Framework_TestCase
 {
  	function testRemplissageSession()
 		{
@@ -9,35 +9,30 @@ class test extends TestCase
 			$this->assertEquals($_SESSION['DB']['dbname'], 'georges');
 			$this->assertEquals($_SESSION['DB']['user'], 'root');
 		}
-
 	function testConnectionBDD ()
 		{
 			fillSession();
 			//ConnectBDD ();
 		}
-
 	function testPrintR ()
 		{
 			$tab['test'] = 'test';
 			$this->assertEquals(monPrint_r ($tab) , '<pre>'.print_r($tab, true).'</pre>');
 		}
-
 	function testChargeTemplate ()
 		{
 			$file = file('contact.template.inc.php');
 			implode ('', $file);
 			$this->assertEquals(implode ('', $file) , chargeTemplate ('contact'));
-
 			global $envoi;
 			chargeTemplate ('contact');
 			$this->assertEquals($envoi['sous-menu'] , creeMenu(['contact' => '' ]));
 		}
-
 	function testGetData ()	
 		{
 			$this->assertEquals(getData('coucou', 'test') , "[coucou][test] inconnu");
 		}
-
 } 
+
 
 
