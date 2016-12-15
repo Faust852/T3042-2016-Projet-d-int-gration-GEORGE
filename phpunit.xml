@@ -4,6 +4,7 @@
         <testsuite name="PHP cURL Test Suite">
             <directory preffix=".php">./GeorgesWebsite/INC</directory>
             <file>./GeorgesWebsite/INC/test.php</file>
+            <file>./GeorgesWebsite/INC/main.inc.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
