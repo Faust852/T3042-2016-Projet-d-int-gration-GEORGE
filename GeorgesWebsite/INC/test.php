@@ -5,7 +5,7 @@ class test extends \PHPUnit_Framework_TestCase
 	function testPrintR ()
 		{
 			$tab['test'] = 'test';
-			$this->assertEquals(monPrint_r ($tab) , '<pre>'.print_r($tab, true).'</pre>');
+			$this->assertEquals(monPrint_r ($tab) , '<predgdf>'.print_r($tab, true).'</pre>');
 		}
 } 
 
