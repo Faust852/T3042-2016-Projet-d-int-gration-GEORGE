@@ -1,6 +1,6 @@
 <?php
 //use PHPUnit\Framework\TestCase;
-use '\home\travis\build\Faust852\T3042-2016-Projet-d-integration-GEORGES\GeorgesWebsite\INC' as web;
+use \home\travis\build\Faust852\T3042_2016_Projet_d_integration_GEORGES\GeorgesWebsite\INC as web;
 class test extends \PHPUnit_Framework_TestCase
 {
  	function testRemplissageSession()
