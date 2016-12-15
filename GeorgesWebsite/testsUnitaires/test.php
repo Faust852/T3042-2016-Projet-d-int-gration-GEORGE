@@ -1,6 +1,6 @@
 <?php
-use PHPUnit\Framework\TestCase;
-class test extends TestCase
+//use PHPUnit\Framework\TestCase;
+class test extends \PHPUnit_Framework_TestCase
 {
  	function testRemplissageSession()
 		{
