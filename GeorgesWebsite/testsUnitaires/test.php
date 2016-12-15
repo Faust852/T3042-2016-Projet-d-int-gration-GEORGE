@@ -1,6 +1,6 @@
 <?php
 //use PHPUnit\Framework\TestCase;
-use \\INC as web;
+use \GeorgesWebsite\INC as web;
 class test extends \PHPUnit_Framework_TestCase
 {
  	function testRemplissageSession()
