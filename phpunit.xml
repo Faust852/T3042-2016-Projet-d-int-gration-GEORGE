@@ -3,6 +3,7 @@
     <testsuites>
         <testsuite name="PHP cURL Test Suite">
             <directory name="test.php">./GeorgesWebsite/INC</directory>
+            <file>./GeorgesWebsite/INC/test.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
