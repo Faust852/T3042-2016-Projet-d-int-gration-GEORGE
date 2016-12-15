@@ -14,7 +14,6 @@ before_script:
  
 script:
     - phpunit
-    - phpunit test GeorgesWebsite/INC/test.php
  
 notifications:
     email: false
